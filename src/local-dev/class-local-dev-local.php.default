@@ -1,0 +1,42 @@
+<?php
+/**
+ *
+ * Local Development Configuration
+ *
+ * This file is used to configure the local development environment.
+ *
+ * @package StaticSnap
+ */
+
+// phpcs:disable
+
+namespace StaticSnap\Local_Dev;
+
+final class Local_Dev_Local implements Local_Dev_Interface {
+	/**
+	 * Get API URL
+	 *
+	 * @param string $path path.
+	 * @param string $scope scope. This is used to identify the request source and for dev purposes.
+	 * @return string
+	 */
+	public function get_static_snap_website_url( string $_website_url, $scope = 'backend' ): string {
+		// website url is docker host.
+		$website_url = 'backend' === $scope ? 'http://host.docker.internal:4321' : 'http://localhost:4321';
+		return $website_url;
+	}
+
+	/**
+	 * Get API URL
+	 *
+	 * @param string $path path.
+	 * @param string $scope scope. This is used to identify the request source and for dev purposes.
+	 * @return string
+	 */
+	public function get_static_snap_api_url( string $_api_url, $scope = 'backend' ): string {
+		// api url is docker host.
+		$api_url = 'backend' === $scope ? 'http://host.docker.internal:4322' : 'http://localhost:4322';
+
+		return $api_url;
+	}
+}

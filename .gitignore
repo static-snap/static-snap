@@ -1,0 +1,29 @@
+/assets/js/
+/tmp/
+/vendor/
+/vendor_prefixed/
+
+node_modules
+dist
+assets/js/bundle*
+/build
+**/*/app/build
+
+
+#yarn
+yarn-error.log
+
+
+# misc
+.DS_Store
+
+# nx cache
+.nx
+
+.phpunit*
+/languages/
+
+# phpunit
+/.phpunit.result.cache
+
+

@@ -1,0 +1,76 @@
+/* Variables */
+.static-snap-search-results {
+	--ss-main-font: inherit;
+	--ss-main-font-size: 1rem;
+	--ss-title-font-size: 1.25rem;
+	--ss-footer-font-size: 0.875rem;
+	--ss-main-color: inherit;
+	--ss-secondary-color: inherit;
+	--ss-background-color: inherit;
+	--ss-padding: 0.313rem;
+	--ss-margin: 1rem 0;
+}
+
+/* Contenedor principal */
+.static-snap-search-results {
+	font-family: var(--ss-main-font);
+	font-size: var(--ss-main-font-size);
+	margin: var(--ss-margin);
+	padding: var(--ss-padding);
+	background-color: var(--ss-background-color);
+}
+
+/* Lista de resultados */
+.static-snap-search-results ol {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+/* Elementos de la lista */
+.static-snap-search-results li {
+	margin-bottom: var(--ss-margin);
+}
+
+/* Artículo */
+.static-snap-search-results article {
+	padding-bottom: var(--ss-padding);
+	margin-bottom: var(--ss-padding);
+}
+
+.static-snap-search-results article:last-child {
+	margin-bottom: 0;
+}
+
+/* Encabezado del artículo */
+.static-snap-search-results .entry-header {
+	margin-bottom: var(--ss-padding);
+}
+
+/* Título del artículo */
+.static-snap-search-results .entry-title {
+	font-size: var(--ss-title-font-size);
+	margin: 0;
+}
+
+.static-snap-search-results .entry-title a {
+	text-decoration: none;
+	color: var(--ss-main-color);
+}
+
+.static-snap-search-results .entry-title a:hover {
+	color: var(--ss-secondary-color);
+}
+
+/* Contenido del artículo */
+.static-snap-search-results .entry-content {
+	font-size: var(--ss-main-font-size);
+	color: #333;
+}
+
+/* Pie de página del artículo */
+.static-snap-search-results .entry-footer {
+	font-size: var(--ss-footer-font-size);
+	color: #777;
+	margin-top: var(--ss-padding);
+}

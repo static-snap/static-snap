@@ -1,0 +1,92 @@
+{
+  "env": {
+    "browser": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "globals": {
+    "wp": true,
+    "window": true,
+    "document": true,
+    "React": true,
+    "module": true,
+    "require": true
+  },
+  "parserOptions": {
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint/eslint-plugin",
+    "import",
+    "eslint-plugin-import-helpers",
+    "optimize-regex",
+    "react-hooks",
+    "eslint-plugin-tsdoc"
+  ],
+  "extends": [
+    "prettier",
+    "eslint:recommended",
+    "plugin:prettier/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:@wordpress/eslint-plugin/jsdoc"
+  ],
+
+  "rules": {
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off",
+    "curly": ["error", "all"],
+    "dot-location": ["error", "property"],
+    "dot-notation": "error",
+    "eqeqeq": "error",
+    "no-else-return": "error",
+    "no-script-url": "error",
+    "no-useless-concat": "error",
+    "sort-keys": "warn",
+    "@typescript-eslint/member-delimiter-style": [
+      "warn",
+      {
+        "multiline": {
+          "delimiter": "semi",
+          "requireLast": true
+        },
+        "singleline": {
+          "delimiter": "semi",
+          "requireLast": false
+        }
+      }
+    ],
+
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_"
+      }
+    ],
+
+    // PLUGIN-IMPORT-HELPERS
+    "import-helpers/order-imports": [
+      "warn",
+      {
+        "alphabetize": { "ignoreCase": true, "order": "asc" },
+        "groups": ["/^react$/", "module", ["absolute", "/^~/", "parent", "sibling", "index"]],
+        "newlinesBetween": "always"
+      }
+    ],
+    // IMPORT OVERRIDES
+    "import/no-duplicates": "error",
+    "import/no-unresolved": "off",
+    // OPTIMIZE REGEX
+    "optimize-regex/optimize-regex": "error",
+
+    // TSDOC
+    "tsdoc/syntax": "warn",
+
+    "no-restricted-imports": [
+      "error",
+      {
+        "patterns": ["@mui/*/*/*"]
+      }
+    ]
+  }
+}

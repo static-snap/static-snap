@@ -1,0 +1,27 @@
+{
+  "name": "@staticsnap/frontend",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist/**/*"
+  ],
+  "license": "GPL-3.0-or-later",
+  "private": false,
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "tsc && NODE_ENV=production wp-scripts build"
+  },
+  "dependencies": {
+    "fuse.js": "^7.0.0",
+    "mustache": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/mustache": "^4.2.5",
+    "typescript": "^5.3.3"
+  }
+}

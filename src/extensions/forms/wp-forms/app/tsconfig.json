@@ -1,0 +1,16 @@
+{
+  "extends": "../../../../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./",
+    "rootDir": "./src",
+    "declaration": true,
+    "outDir": "./dist",
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "typeRoots": ["./node_modules/@types"],
+    "paths": {
+      "@staticsnap/frontend": ["../../../../../frontend/app/src"]
+    }
+  },
+  "include": ["./src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "webpack.config.js"]
+}

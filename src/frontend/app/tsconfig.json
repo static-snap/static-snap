@@ -1,0 +1,18 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "rootDir": "./src",
+    "typeRoots": ["./node_modules/@types"],
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "outDir": "./dist",
+    "tsBuildInfoFile": "./dist/.tsbuildinfo",
+    "paths": {
+      "@staticsnap/frontend": ["./src/index.ts"],
+      "@staticsnap/frontend/*": ["./src/*"]
+    }
+  },
+  "include": ["./src/**/*.ts"],
+  "exclude": ["node_modules", "dist", "webpack.config.js", "babel.config.js"]
+}

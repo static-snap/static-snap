@@ -1,0 +1,47 @@
+name: Static Site Deployment by StaticSnap
+
+on:
+  release:
+    types: [published]
+permissions:
+  contents: write
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get metadata
+        uses: static-snap/release-downloader@main
+        id: get-metadata
+        with:
+          fileName: 'release.zip'
+          latest: true
+          downloadAssets: false
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{steps.get-metadata.outputs.target_commitish}}
+      - name: Extract zip
+        uses: static-snap/release-downloader@main
+        with:
+          fileName: 'release.zip'
+          latest: true
+          downloadAssets: true
+      - name: Unzip release
+        run: |
+          unzip release.zip -d .release
+          rm release.zip
+      - name: Copy files to repository directory
+        run: |
+          rm * -rf
+          cp -r .release/* .
+          rm -rf .release
+
+      - name: Commit y Push
+        run: |
+          DATE=$(date)
+          echo $DATE > .static-snap
+          git config user.name static-snap
+          git config user.email bot@staticsnap.com
+          git add .
+          git commit -m "StaticSnap update ${DATE}"
+          git push

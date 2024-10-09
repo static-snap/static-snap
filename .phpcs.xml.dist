@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="WordPress Coding Standards"
+	xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/PHPCSStandards/PHP_CodeSniffer/master/phpcs.xsd">
+
+	<description>Ruleset for StaticSnap.</description>
+
+	<file>static-snap.php</file>
+	<file>./src/</file>
+
+
+	<arg name="extensions" value="php" />
+
+
+	<!-- Exclude Composer vendor directory. -->
+	<exclude-pattern>*/vendor/*</exclude-pattern>
+
+	<!-- Only check PHP files. -->
+	<arg name="extensions" value="php" />
+
+	<!-- Show progress, show the error codes for each message (source). -->
+	<arg value="ps" />
+
+	<!-- Strip the filepaths down to the relevant bit. -->
+	<arg name="basepath" value="." />
+
+	<!-- Check up to 8 files simultaneously. -->
+	<arg name="parallel" value="8" />
+
+
+	<!--
+	#############################################################################
+	SET UP THE RULESETS
+	#############################################################################
+	-->
+
+	<rule ref="WordPress" />
+
+	<!-- Check code for cross-version PHP compatibility. -->
+	<config name="testVersion" value="7.4-" />
+
+	<rule ref="PHPCompatibility">
+		<!-- Exclude PHP constants back-filled by PHPCS. -->
+		<exclude name="PHPCompatibility.Constants.NewConstants.t_finallyFound" />
+		<exclude name="PHPCompatibility.Constants.NewConstants.t_yieldFound" />
+		<exclude name="PHPCompatibility.Constants.NewConstants.t_ellipsisFound" />
+		<exclude name="PHPCompatibility.Constants.NewConstants.t_powFound" />
+		<exclude name="PHPCompatibility.Constants.NewConstants.t_pow_equalFound" />
+		<exclude name="PHPCompatibility.Constants.NewConstants.t_spaceshipFound" />
+		<exclude name="PHPCompatibility.Constants.NewConstants.t_coalesceFound" />
+		<exclude name="PHPCompatibility.Constants.NewConstants.t_coalesce_equalFound" />
+		<exclude name="PHPCompatibility.Constants.NewConstants.t_yield_fromFound" />
+	</rule>
+
+	<!-- Enforce PSR1 compatible namespaces. -->
+	<rule ref="PSR1.Classes.ClassDeclaration" />
+
+	<!-- Enforce that classes are abstract or final. -->
+	<rule ref="Universal.Classes.RequireFinalClass">
+		<!-- ... with the exception of four sniffs which are known to be extended by external
+		standards. -->
+		<exclude-pattern>/WordPress/Sniffs/NamingConventions/ValidHookNameSniff\.php$</exclude-pattern>
+		<exclude-pattern>
+			/WordPress/Sniffs/Security/(EscapeOutput|NonceVerification|ValidatedSanitizedInput)Sniff\.php$</exclude-pattern>
+	</rule>
+
+	<!-- Enforce that methods in traits are always final. -->
+	<rule ref="Universal.FunctionDeclarations.RequireFinalMethodsInTraits" />
+
+
+	<!--
+	#############################################################################
+	SNIFF SPECIFIC CONFIGURATION
+	#############################################################################
+	-->
+
+	<rule ref="WordPress.Arrays.MultipleStatementAlignment">
+		<properties>
+			<property name="alignMultilineItems" value="!=100" />
+			<property name="exact" value="false" phpcs-only="true" />
+		</properties>
+	</rule>
+
+
+</ruleset>

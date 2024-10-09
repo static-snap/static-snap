@@ -1,0 +1,27 @@
+{
+  "name": "@staticsnap/dashboard",
+  "version": "0.0.1",
+  "description": "",
+  "author": "",
+  "main": "./src/index.js",
+  "license": "GPL-3.0-or-later",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.11.3",
+    "@emotion/styled": "^11.11.0",
+    "@iconify/react": "^4.1.1",
+    "@monaco-editor/react": "^4.6.0",
+    "@mui/lab": "^5.0.0-alpha.170",
+    "@mui/material": "^5.15.15",
+    "@staticsnap/frontend": "^0.3.2",
+    "@textea/json-viewer": "^3.4.0",
+    "@wordpress/i18n": "^4.51.0",
+    "react": "^18.2.0",
+    "react-hook-form": "^7.51.0",
+    "react-router-dom": "^6.22.0",
+    "simplebar-react": "^3.2.4"
+  },
+  "devDependencies": {
+    "@types/react-router-dom": "^5.3.3"
+  }
+}

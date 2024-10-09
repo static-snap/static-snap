@@ -1,0 +1,7 @@
+{
+  "phpSniffer.autoDetect": true,
+  "[php]": {
+    "editor.defaultFormatter": "wongjn.php-sniffer"
+  },
+  "php.stubs": ["*", "wordpress","./stubs.php"]
+}

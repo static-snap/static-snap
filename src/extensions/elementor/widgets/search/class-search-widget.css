@@ -1,0 +1,46 @@
+.static-snap-search-form .static-snap-search-form-container {
+	min-height: 50px;
+	border-radius: 3px;
+	display: flex;
+	transition: 0.2s;
+	overflow: hidden;
+	border: 0 solid transparent;
+	background-color: #f1f2f3;
+}
+.static-snap-search-form .static-snap-search-form-container input {
+	padding-left: calc(50px / 3);
+	padding-right: calc(50px / 3);
+	font-family: var(--e-global-typography-text-font-family), Sans-serif;
+	font-weight: var(--e-global-typography-text-font-weight);
+	color: var(--e-global-color-text);
+	fill: var(--e-global-color-text);
+	margin: 0;
+	border: 0;
+	display: inline-block;
+	vertical-align: middle;
+	white-space: normal;
+	background: none;
+	line-height: 1;
+	min-width: 0;
+	font-size: 15px;
+	-webkit-appearance: none;
+	flex-basis: 100%;
+	transition: color 0.2s;
+}
+
+.static-snap-search-form .static-snap-search-form-container button[type="submit"] {
+	min-width: 50px;
+	background-color: var(--e-global-color-secondary);
+	color: var(--e-search-form-submit-text-color, #fff);
+	border: none;
+	border-radius: 0;
+}
+.static-snap-search-form .static-snap-search-form-container button[type="submit"]:hover {
+	color: var(--e-search-form-submit-text-color, #fff);
+	border: none;
+	background-color: var(--e-global-color-primary);
+	box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+}
+
+.static-snap-search-form .static-snap-search-results {
+}
