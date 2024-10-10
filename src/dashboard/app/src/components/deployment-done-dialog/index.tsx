@@ -13,6 +13,7 @@ import StatusInterface from '@staticsnap/dashboard/interfaces/status.interface';
 import { __, sprintf } from '@wordpress/i18n';
 
 import DeploymentDoneDialogIcon from './icon';
+import apiFetch from '@wordpress/api-fetch';
 
 const Transition = React.forwardRef(function Transition(
   props: TransitionProps & {
@@ -30,19 +31,47 @@ type DeploymentDoneDialogProps = {
 
 export default function DeploymentDoneDialog({ status }: DeploymentDoneDialogProps) {
   const [open, setOpen] = useState(false);
+  const [showDownloadButton, setShowDownloadButton] = useState(false);
+  const [lastDeploymentEnvironmentId, setLastDeploymentEnvironmentId] = useState<string | null>(
+    null
+  );
 
   const handleClose = useCallback(() => {
     setOpen(false);
   }, []);
-  const handleVisitStaticSite = useCallback(() => {
-    //window.open('#', '_blank');
-  }, []);
+  const handleDownloadZipFile = useCallback(async () => {
+    if (!lastDeploymentEnvironmentId) {
+      console.error('lastDeploymentId is not defined');
+      return;
+    }
+    const response = await apiFetch<{ success: boolean; url: string }>({
+      method: 'POST',
+      path: `/static-snap/v1/deployments-history/download/${lastDeploymentEnvironmentId}`,
+    });
+    if (response.url) {
+      window.open(response.url, '_blank');
+    }
+  }, [lastDeploymentEnvironmentId]);
 
   useEffect(() => {
     if (status.is_done) {
       setOpen(status.is_done);
+      setLastDeploymentEnvironmentId(status.last_deployment?.environment_id || null);
+      try {
+        const lastDeploymentSettings = JSON.parse(
+          status.last_deployment?.environment_settings || '{}'
+        );
+        setShowDownloadButton(!!lastDeploymentSettings?.create_zip_file);
+      } catch (e) {
+        // nothing to do
+        console.error(e);
+      }
     }
-  }, [status.is_done]);
+  }, [
+    status.is_done,
+    status.last_deployment?.environment_settings,
+    status.last_deployment?.environment_id,
+  ]);
 
   return (
     <>
@@ -54,7 +83,7 @@ export default function DeploymentDoneDialog({ status }: DeploymentDoneDialogPro
               <DeploymentDoneDialogIcon />
               {__(
                 sprintf(
-                  'Deployment for Environment %s was successful! You can now visit the static site.',
+                  'Deployment for Environment %s was successful!',
                   status.last_deployment?.environment_name || null
                 ),
                 'static-snap'
@@ -63,9 +92,11 @@ export default function DeploymentDoneDialog({ status }: DeploymentDoneDialogPro
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button variant="contained" onClick={handleVisitStaticSite}>
-            {__('View static site', 'static-snap')}
-          </Button>
+          {showDownloadButton && (
+            <Button variant="contained" onClick={handleDownloadZipFile}>
+              {__('Download ZIP file', 'static-snap')}
+            </Button>
+          )}
           <Button onClick={handleClose}>{__('Close', 'static-snap')}</Button>
         </DialogActions>
       </Dialog>

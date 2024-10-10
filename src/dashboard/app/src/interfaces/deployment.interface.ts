@@ -2,6 +2,7 @@ export default interface DeploymentInterface {
   id: string;
   environment_id: string;
   environment_name: string;
+  environment_settings: string;
   status: number;
   start_time: Date;
   end_time: Date;
