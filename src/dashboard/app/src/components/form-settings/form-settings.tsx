@@ -32,7 +32,7 @@ const FormSettings = ({ title }: FormSettingsProps) => {
 
   const defaultValues: FormSettingInterface = {
     _google_recaptcha_secret_key: '',
-    enabled: true,
+    enabled: false,
     google_recaptcha_site_key: '',
   };
 
