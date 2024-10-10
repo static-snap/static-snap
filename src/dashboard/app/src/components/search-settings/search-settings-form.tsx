@@ -34,7 +34,7 @@ const SearchSettingsForm = ({ title }: SearchSettingsFormProps) => {
   const [value] = useState<SearchSettingInterface>();
   const [searchSettings, setSearchSettings] = useState<ExtensionSetting>({});
   const defaultValues: SearchSettingInterface = {
-    enabled: true,
+    enabled: false,
     frontend_settings: {
       search_results_selector: '',
       search_selector: '',
