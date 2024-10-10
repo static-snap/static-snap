@@ -1,10 +1,9 @@
 {
-  "name": "staticsnap",
-  "version": "0.0.1",
-  "main": "index.js",
+  "name": "static-snap",
+  "version": "0.1.0",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/static-snap"
+    "url": "git+https://github.com/static-snap/static-snap"
   },
   "author": "Leandro Emanuel López <lopezlean@gmail.com>",
   "license": "GPL-3.0-or-later",
