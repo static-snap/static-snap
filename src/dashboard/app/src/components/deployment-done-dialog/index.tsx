@@ -35,7 +35,7 @@ export default function DeploymentDoneDialog({ status }: DeploymentDoneDialogPro
     setOpen(false);
   }, []);
   const handleVisitStaticSite = useCallback(() => {
-    window.open('https://open.uwh.es', '_blank');
+    //window.open('#', '_blank');
   }, []);
 
   useEffect(() => {
