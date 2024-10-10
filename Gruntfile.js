@@ -43,6 +43,7 @@ module.exports = function (grunt) {
               'vendor_prefixed/**/*.php',
               'assets/**',
               '*.php',
+              '!src/local-dev/class-local-dev-local.php',
               '!src/**/*.ts',
               '!src/**/*.tsx',
             ],
