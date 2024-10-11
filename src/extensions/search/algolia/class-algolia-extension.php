@@ -10,7 +10,7 @@ namespace StaticSnap\Extensions\Search\Algolia;
 use StaticSnap\Config\Options;
 use StaticSnap\Search\Search_Extension_Base;
 
-use Algolia\AlgoliaSearch\SearchClient;
+use StaticSnapVendor\Algolia\AlgoliaSearch\SearchClient;
 use StaticSnap\Constants\Filters;
 
 /**
