@@ -89,6 +89,18 @@ return [
 				// also in background-processing.php
 				$contents = str_replace( "\\class_alias('StaticSnapVendor\\\\WP_Background_Process', 'WP_Background_Process', \\false);", "\\class_alias('StaticSnapVendor\\\\WP_Background_Process', 'StaticSnapVendor_WP_Background_Process', \\false);", $contents );
 			}
+			if (  false !== strpos( $filePath, 'algolia/algoliasearch-client-php/src/Http/GuzzleHttpClient.php' )) {
+				// use non deprecated class.
+				$contents = str_replace( "\\StaticSnapVendor\\GuzzleHttp\\choose_handler", "\\StaticSnapVendor\\GuzzleHttp\\Utils::chooseHandler",$contents );
+
+			}
+
+			//vendor_prefixed/algolia/algoliasearch-client-php/src/SearchIndex.php
+			if (  false !== strpos( $filePath, 'algolia/algoliasearch-client-php/src/SearchIndex.php' )) {
+				$contents = str_replace( "api_path", "Helpers::apiPath",$contents );
+			}
+
+
             return $contents;
         },
     ],
