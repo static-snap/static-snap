@@ -80,7 +80,7 @@ final class Github_Manager extends Cache_Persister {
 	 */
 	public function get_user_repositories( $installation, $page = 1, $cache = true ) {
 		if ( $cache ) {
-			$cache_items = $this->get_cache( array( $installation ) );
+			$cache_items = $this->get_cache( array( $installation, $page ) );
 			if ( ! empty( $cache_items ) ) {
 				return $cache_items;
 			}
@@ -89,7 +89,7 @@ final class Github_Manager extends Cache_Persister {
 		$api          = new API();
 		$repositories = $api->get( '/github/installations/repositories/' . $installation );
 
-		$this->set_cache( $repositories, array( $installation ) );
+		$this->set_cache( $repositories, array( $installation, $page ) );
 		$this->persist_cache();
 
 		return $repositories;
