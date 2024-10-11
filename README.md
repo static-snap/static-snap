@@ -1,4 +1,4 @@
-# Static Snap Plugin
+# Static Snap
 
 **Static Snap** is a powerful WordPress plugin that transforms your dynamic WordPress site into a static website, enabling seamless integration and deployment across various hosting services.
 
