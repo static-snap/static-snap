@@ -75,9 +75,10 @@ abstract class Cache_Persister {
 		// get function caller.
 		// phpcs:ignore
 		$caller = debug_backtrace()[1]['class'] . '::' . debug_backtrace()[1]['function'] ;
-		if ( empty( $args_as_string ) ) {
+		if ( ! empty( $args_as_string ) ) {
 			$caller .= '_' . $args_as_string;
 		}
+
 		return $this->get_cache_for_key( $caller );
 	}
 
@@ -104,7 +105,7 @@ abstract class Cache_Persister {
 		$args_as_string = implode( '_', $params );
 		// phpcs:ignore
 		$caller = debug_backtrace()[1]['class'] . '::' . debug_backtrace()[1]['function'];
-		if ( empty( $args_as_string ) ) {
+		if ( ! empty( $args_as_string ) ) {
 			$caller .= '_' . $args_as_string;
 		}
 		$this->set_cache_for_key( $caller, $value );
