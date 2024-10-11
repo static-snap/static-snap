@@ -39,6 +39,7 @@ module.exports = function (grunt) {
             expand: true,
             src: [
               'composer.json',
+              'readme.txt',
               'src/**',
               'vendor_prefixed/**/*.php',
               'assets/**',
