@@ -299,7 +299,7 @@ final class Github_Manager extends Cache_Persister {
 		// Upload asset using cURL.
 
 		// Initialize GuzzleHttp Client.
-		$guzzle_client = new \GuzzleHttp\Client();
+		$guzzle_client = new \StaticSnapVendor\GuzzleHttp\Client();
 		$upload_url    = str_replace( '{?name,label}', '?name=release.zip', $release['upload_url'] );
 
 		try {
