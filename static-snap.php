@@ -26,6 +26,11 @@
 
 declare(strict_types=1);
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
+
 
 /**
  * Define the default root file of the plugin

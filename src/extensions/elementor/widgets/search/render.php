@@ -5,6 +5,10 @@
  * @package StaticSnap
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
+
 use StaticSnap\Search\Search_Form_Template;
 
 
