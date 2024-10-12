@@ -186,4 +186,28 @@ abstract class Table {
 			)
 		);
 	}
+
+	/**
+	 * Replace the 'NULL' string with NULL
+	 *
+	 * @param  string $query The query to replace the 'NULL' string with NULL.
+	 * @return string $query
+	 */
+	public function wp_db_null_value( $query ) {
+		return str_ireplace( "'NULL'", 'NULL', $query );
+	}
+
+	/**
+	 * Fix null values filter
+	 */
+	protected function start_fix_null_values_filter() {
+		add_filter( 'query', array( $this, 'wp_db_null_value' ) );
+	}
+
+	/**
+	 * Remove null values filter
+	 */
+	protected function end_fix_null_values_filter() {
+		remove_filter( 'query', array( $this, 'wp_db_null_value' ) );
+	}
 }
