@@ -51,7 +51,7 @@ final class Create_ZIP_File_Task extends Task {
 				$file = new \SplFileInfo( $url->local_path_destination );
 				// remove ROOT path from the file path.
 				$file_entry_name = str_replace( $this->deployment_process->get_environment()->get_build_path() . DIRECTORY_SEPARATOR, '', $url->local_path_destination );
-				$added           = $zip->addFile( $file->getRealPath(), $file_entry_name );
+				$zip->addFile( $file->getRealPath(), $file_entry_name );
 
 				// mark the url as deployed.
 				$database->set_deployed( $url->id );
