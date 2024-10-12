@@ -19,7 +19,6 @@
  * License URI:     https://www.gnu.org/licenses/gpl-3.0.html
  * Plugin URI:      https://staticsnap.com
  * Text Domain:     static-snap
- * Domain Path:     /languages
  * Requires PHP:    7.4
  * Requires WP:     6.5.0
  * Namespace:       StaticSnap
