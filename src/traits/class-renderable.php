@@ -175,7 +175,7 @@ trait Renderable {
 	 *
 	 * @return void
 	 */
-	final public function render( array $data = array(), $allowed_html = array() ): void {
+	final public function render( array $data = array() ): void {
 
 		if ( ! $this->template_engine ) {
 			$this->init_template_engine();
