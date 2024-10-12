@@ -36,7 +36,7 @@ jobs:
           cp -r .release/* .
           rm -rf .release
 
-      - name: Commit y Push
+      - name: Commit and Push
         run: |
           DATE=$(date)
           echo $DATE > .static-snap
