@@ -83,6 +83,13 @@ final class Deployment_Process extends WP_Background_Process implements Deployme
 	 */
 	private $head;
 
+	/**
+	 * Prefix
+	 *
+	 * @var string
+	 */
+	protected $prefix = 'static_snap';
+
 
 	/**
 	 * Constructor
