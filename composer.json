@@ -2,6 +2,7 @@
   "name": "static-snap/static-snap",
   "type": "project",
 	"description": "Static Snap transforms your dynamic WordPress site into a static website for seamless integration and deployment through various hosting services. This documentation will guide you through the installation, configuration, and usage of the Static Snap plugin. StaticSnap is an ideal solution for businesses looking to optimize their website's performance, security, and manageability without losing the dynamic capabilities they depend on. This powerful tool combines the best of WordPress with the advantages of static websites, enhanced by seamless integration with GitHub for effortless version control and backups.",
+	"license": "GPL-3.0-or-later",
   "autoload": {
     "classmap": [
       {
