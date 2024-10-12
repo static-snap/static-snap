@@ -43,7 +43,6 @@ Contributions to the Static Snap plugin are welcome!
 At Static Snap, we make use of a specific toolset to develop our code. Please ensure you have the following tools installed before contributing:
 
 - [Composer](https://getcomposer.org/)
-- [Webpack](https://webpack.js.org/)
 - [Yarn](https://yarnpkg.com/)
 
 ### Getting Started
