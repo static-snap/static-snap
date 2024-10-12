@@ -10,11 +10,11 @@
 /**
  *
  * Plugin Name:     Static Snap
- * Plugin URI:      https://staticsnap.com
+ * Plugin URI:      https://staticsnap.com/?utm_source=wp-plugins&utm_campaign=plugin-uri&utm_medium=wp-dash
  * Description:     Static Snap transforms WordPress into a powerful tool for creating static websites.
  * Version:         0.1.0
  * Author:          Static Snap
- * Author URI:      https://staticsnap.com
+ * Author URI:      https://staticsnap.com/?utm_source=wp-plugins&utm_campaign=author-uri&utm_medium=wp-dash
  * License:         GPLv3
  * License URI:     https://www.gnu.org/licenses/gpl-3.0.html
  * Plugin URI:      https://staticsnap.com
