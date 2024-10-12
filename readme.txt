@@ -33,13 +33,19 @@ License URI: https://www.gnu.org/licenses/gpl-3.0.html
 10. 📋  **Content Management Efficiency**: Users benefit from the familiar WordPress interface for content management while enjoying the performance advantages of a static site.
 
 == Contributing ==
-Contributions to the Static Snap plugin are welcome! Please read our contributing guidelines on our GitHub repository to get started.
+Contributions to the Static Snap plugin are welcome! Please read our contributing guidelines on our [GitHub repository](https://github.com/static-snap/static-snap) to get started.
+
+== Third-Party Services ==
+
+This plugin utilizes third-party services to provide certain functionalities. Below is the information regarding the external services used:
+
+= Static Snap API =
+   - **Description**: This plugin communicates with the Static Snap API to manage certain operations related to the plugin's functionality. This includes transmitting data such as user configurations and usage data.
+   - **Circumstances of Use**: The API is utilized only if the user chooses to enable additional functionality. These extra functionalities include integration with GitHub and the ability to save static forms using the API.
+   - **API Link**: [Static Snap API](https://api.staticsnap.com)
+   - **Terms of Service and Privacy Policy**: [Static Snap Terms of Service](https://staticsnap.com/terms-and-conditions) | [Static Snap Privacy Policy](https://staticsnap.com/privacy-policy)
 
 == Changelog ==
 = 0.1.0 - 2024-09-11 =
 * Initial release of Static Snap.
-
-== Upgrade Notice ==
-= 0.1.0 =
-This is the initial release of Static Snap. Please make sure your server meets the minimum requirements.
 
