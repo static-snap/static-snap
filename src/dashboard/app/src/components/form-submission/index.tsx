@@ -5,11 +5,10 @@ import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
+import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Snackbar from '@mui/material/Snackbar';
 import Stack from '@mui/material/Stack';
-import Divider from '@mui/material/Divider';
-
 import FormSubmissionInterface from '@staticsnap/dashboard/interfaces/form-submission.interface';
 import { JsonViewer } from '@textea/json-viewer';
 import { __ } from '@wordpress/i18n';
