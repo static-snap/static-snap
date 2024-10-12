@@ -16,4 +16,17 @@ use StaticSnap\Traits\OneTimeRenderable;
 final class Search_Result_Template {
 
 	use OneTimeRenderable;
+
+	/**
+	 * Class constructor
+	 */
+	public function __construct() {
+		$this->allowed_html = array(
+			// allow <script type="text/template" id="something">.
+			'script' => array(
+				'type' => true,
+				'id'   => true,
+			),
+		);
+	}
 }

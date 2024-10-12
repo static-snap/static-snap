@@ -38,6 +38,14 @@ trait Renderable {
 
 
 	/**
+	 * Allowed HTML
+	 *
+	 * @var array
+	 */
+	protected $allowed_html = array();
+
+
+	/**
 	 * The directory where the templates are located.
 	 *
 	 * @var string
@@ -167,7 +175,7 @@ trait Renderable {
 	 *
 	 * @return void
 	 */
-	final public function render( array $data = array() ): void {
+	final public function render( array $data = array(), $allowed_html = array() ): void {
 
 		if ( ! $this->template_engine ) {
 			$this->init_template_engine();
@@ -207,7 +215,13 @@ trait Renderable {
 		include $__file;
 		$template = ob_get_clean();
 
-		// phpcs:ignore
-		echo $this->template_engine->render( $template, $data );
+		echo wp_kses(
+			$this->template_engine->render( $template, $data ),
+			array_merge(
+				wp_kses_allowed_html( 'post' ),
+				$this->allowed_html,
+			),
+			wp_allowed_protocols()
+		);
 	}
 }

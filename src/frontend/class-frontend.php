@@ -34,8 +34,7 @@ final class Frontend {
 		$template = new Search_Result_Template();
 		// Keep variables.
 		$template->set_keep_variables( true );
-		// phpcs:ignore
-		echo $template->render();
+		$template->render();
 	}
 
 	/**

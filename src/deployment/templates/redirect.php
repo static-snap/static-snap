@@ -10,12 +10,12 @@
 <html>
 <head>
 	<title>Redirecting...</title>
-	<meta http-equiv="refresh" content="0;url=<?php echo $redirect_url; //phpcs:ignore ?>">
+	<meta http-equiv="refresh" content="0;url=<?php echo esc_url( $redirect_url ); ?>">
 </head>
 <body>
 <body>
 	<?php
-	$redirect_anchor_link = "<a href = \"$redirect_url\" >$redirect_url</a>";
+	$redirect_anchor_link = '<a href = "' . esc_html( $escaped_url ) . '">' . esc_html( $escaped_url ) . '</a>';
 	?>
 
 		<p>
