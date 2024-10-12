@@ -100,6 +100,9 @@ final class Posts_Database {
 	 */
 	public function get_all_archive_dates( $post_statuses = array( 'publish', 'inherit' ) ): array {
 		global $wpdb;
+		if ( ! $wpdb ) {
+			return array();
+		}
 		// get all post types that have archive pages.
 		$post_types = $this->archive_post_types();
 		$query      = sprintf(

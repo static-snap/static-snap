@@ -50,16 +50,19 @@ final class Replacements_URLS_Database extends Table {
 	public function insert_many( array $urls ) {
 		// Insert many urls.
 		global $wpdb;
-		$query  = sprintf(
-			'INSERT IGNORE INTO `%s`
+		if ( ! $wpdb ) {
+			return;
+		}
+		$query  = $wpdb->prepare(
+			'INSERT IGNORE INTO %i
 		(`url`, `url_hash`,`replacement_url`)
 		VALUES ',
 			$wpdb->prefix . $this->table
 		);
 		$values = array();
 		foreach ( $urls as $url ) {
-			$values[] = sprintf(
-				'("%s", "%s", "%s")',
+			$values[] = $wpdb->prepare(
+				'(%s, %s, %s)',
 				$url->get_url(),
 				$url->get_url_hash(),
 				$url->get_url_replacement()

@@ -48,7 +48,6 @@ final class Copy_Assets_Task extends Task {
 
 				// create a file from $url local_path.
 				$database->increase_retries( $url->id );
-
 				$file   = new \SplFileInfo( $url->local_path );
 				$result = Assets::copy( $file, $url, $environment );
 				if ( $result['saved'] ) {
