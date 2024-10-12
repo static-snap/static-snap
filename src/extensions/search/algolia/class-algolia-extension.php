@@ -12,8 +12,8 @@ use StaticSnap\Search\Search_Extension_Base;
 
 use StaticSnapVendor\Algolia\AlgoliaSearch\SearchClient;
 use StaticSnap\Constants\Filters;
-// temporary fix for the issue with the Algolia client if stream_for is not defined.
-if ( ! function_exists( 'stream_for' ) ) {
+// fix for the issue with the Algolia client if stream_for is not defined.
+if ( ! function_exists( '\StaticSnapVendor\Algolia\AlgoliaSearch\Http\Psr7\stream_for' ) ) {
 	require_once STATIC_SNAP_PLUGIN_DIR . '/vendor_prefixed/algolia/algoliasearch-client-php/src/Http/Psr7/functions.php';
 }
 
