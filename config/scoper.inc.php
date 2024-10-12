@@ -44,12 +44,12 @@ return [
 		Finder::create()->files()->in( 'vendor/psr/cache' )->name( [ '*.php', 'LICENSE', 'composer.json' ] ),
 		Finder::create()->files()->in( 'vendor/psr/log' )->name( [ '*.php', 'LICENSE', 'composer.json' ] ),
 
+		// php-http
+		Finder::create()->files()->in( 'vendor/php-http' )->name( [ '*.php', 'LICENSE', 'composer.json' ] ),
 
 		// algolia
 		Finder::create()->files()->in( 'vendor/algolia/algoliasearch-client-php' )->name( [ '*.php', 'LICENSE', 'composer.json' ] ),
 
-		// php-http
-		Finder::create()->files()->in( 'vendor/php-http' )->name( [ '*.php', 'LICENSE', 'composer.json' ] ),
 
 		// knplabs github-api
 		Finder::create()->files()->in( 'vendor/knplabs/github-api' )->name( [ '*.php', 'LICENSE', 'composer.json' ] ),
@@ -62,7 +62,7 @@ return [
     //
     // For more see: https://github.com/humbug/php-scoper/blob/master/docs/configuration.md#patchers
     'exclude-files' => [
-        'src/a-whitelisted-file.php',
+        //'src/a-whitelisted-file.php',
     ],
 
     // When scoping PHP files, there will be scenarios where some of the code being scoped indirectly references the
