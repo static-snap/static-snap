@@ -95,7 +95,7 @@ const WebsitesIndex = () => {
               const confirm = window.confirm(
                 __(
                   'Are you sure you want to delete this website? If you remove it, all forms from static websites will stop working if you are using staticsnap.com to store the form data. Read more about this in the documentation: https://staticsnap.com/docs/website-configuration#delete-website',
-                  'staticsnap'
+                  'static-snap'
                 )
               );
               if (!confirm) {

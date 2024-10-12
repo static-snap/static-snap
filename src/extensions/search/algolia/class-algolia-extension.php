@@ -100,28 +100,28 @@ final class Algolia_Extension extends Search_Extension_Base {
 				'default'    => '',
 				'type'       => 'text',
 				'label'      => 'Application ID',
-				'helperText' => __( 'The application ID for your Algolia account.', 'staticsnap' ),
+				'helperText' => __( 'The application ID for your Algolia account.', 'static-snap' ),
 			),
 			'algolia_search_key' => array(
 				'required'   => true,
 				'default'    => '',
 				'type'       => 'text',
 				'label'      => 'Search Key',
-				'helperText' => __( 'The search key for your Algolia account.', 'staticsnap' ),
+				'helperText' => __( 'The search key for your Algolia account.', 'static-snap' ),
 			),
 			'_algolia_admin_key' => array(
 				'required'   => true,
 				'default'    => '',
 				'type'       => 'text',
 				'label'      => 'Admin Key',
-				'helperText' => __( 'The admin key for your Algolia account.', 'staticsnap' ),
+				'helperText' => __( 'The admin key for your Algolia account.', 'static-snap' ),
 			),
 			'algolia_index_name' => array(
 				'required'   => true,
 				'default'    => sanitize_title( get_bloginfo( 'name' ) ),
 				'type'       => 'text',
 				'label'      => 'Index Name',
-				'helperText' => __( 'The index name for your Algolia account.', 'staticsnap' ),
+				'helperText' => __( 'The index name for your Algolia account.', 'static-snap' ),
 			),
 		);
 	}

@@ -48,14 +48,14 @@ const FormSubmission = ({ item, closeDrawer }: FormSubmissionProps) => {
         open={showSnakbar}
         autoHideDuration={6000}
         onClose={() => setShowSnackbar(false)}
-        message={__('Copied to clipboard', 'staticsnap')}
+        message={__('Copied to clipboard', 'static-snap')}
       />
       <CardHeader
-        title={__('Form Submission', 'staticsnap')}
+        title={__('Form Submission', 'static-snap')}
         subheader={created}
         action={
           <>
-            <IconButton onClick={copyToClipboard} title={__('Copy to clipboard', 'staticsnap')}>
+            <IconButton onClick={copyToClipboard} title={__('Copy to clipboard', 'static-snap')}>
               <Icon icon="material-symbols:content-copy-outline-rounded" />
             </IconButton>
             <IconButton onClick={closeDrawer}>
@@ -112,7 +112,7 @@ const FormSubmission = ({ item, closeDrawer }: FormSubmissionProps) => {
                       variant="contained"
                       color="info"
                     >
-                      {__('View', 'staticsnap')}
+                      {__('View', 'static-snap')}
                     </Button>
                   </LightTooltip>
                 ) : (

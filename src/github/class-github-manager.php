@@ -322,7 +322,7 @@ final class Github_Manager extends Cache_Persister {
 			// Check if upload was successful.
 			if ( 201 !== $status_code ) {
 				// translators: %s is the status_code.
-				throw new \Exception( sprintf( __( 'Failed to upload asset, status code: %s' ), $status_code ) );
+				throw new \Exception( sprintf( __( 'Failed to upload asset, status code: %s', 'static-snap' ), $status_code ) );
 			}
 		} catch ( \Exception $e ) {
 			return false;
