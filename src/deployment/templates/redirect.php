@@ -5,6 +5,9 @@
  * @package StaticSnap
  */
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit; // Exit if accessed directly.
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -15,7 +18,7 @@
 <body>
 <body>
 	<?php
-	$redirect_anchor_link = '<a href = "' . esc_html( $escaped_url ) . '">' . esc_html( $escaped_url ) . '</a>';
+	$redirect_anchor_link = '<a href = "' . esc_html( $redirect_url ) . '">' . esc_html( $redirect_url ) . '</a>';
 	?>
 
 		<p>
