@@ -32,13 +32,36 @@
 
 ## Installation
 
-1. **Download the Plugin**: Download the Static Snap plugin from the WordPress plugin directory or our GitHub repository.
-2. **Install the Plugin**: Navigate to your WordPress dashboard, go to the 'Plugins' section, click 'Add New', then 'Upload Plugin', and select the downloaded file.
-3. **Activate the Plugin**: After uploading, click on 'Activate Plugin' to enable Static Snap on your WordPress site.
+Here's a [guide on how to Getting Started with Static Snap](https://docs.staticsnap.com/en/getting-started/).
 
 ## Contributing
 
-Contributions to the Static Snap plugin are welcome! Please read our contributing guidelines on our GitHub repository to get started.
+Contributions to the Static Snap plugin are welcome!
+
+### Prerequisites
+
+At Static Snap, we make use of a specific toolset to develop our code. Please ensure you have the following tools installed before contributing:
+
+- [Composer](https://getcomposer.org/)
+- [Webpack](https://webpack.js.org/)
+- [Yarn](https://yarnpkg.com/)
+
+### Getting Started
+
+After installing the tools mentioned above, you can use the following steps to acquire a development version of Static Snap.
+
+Within your WordPress installation, navigate to `wp-content/plugins` and run the following commands:
+
+````bash
+git clone https://github.com/static-snap/static-snap.git
+cd static-snap
+
+To install all the necessary dependencies, run the following commands:
+```bash
+composer install
+yarn
+yarn start
+````
 
 ## License
 
