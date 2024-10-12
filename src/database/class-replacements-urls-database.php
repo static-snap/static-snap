@@ -28,7 +28,7 @@ final class Replacements_URLS_Database extends Table {
 	 *
 	 * @var string
 	 */
-	protected $table_definition = <<<EOD
+	protected $table_definition = '
 	CREATE TABLE %s (
 		id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 		url VARCHAR(255) NOT NULL,
@@ -39,7 +39,7 @@ final class Replacements_URLS_Database extends Table {
 		PRIMARY KEY  (id),
 		UNIQUE KEY url_hash_index (url_hash)
 		) %s;
-	EOD;
+	';
 
 
 	/**

@@ -32,7 +32,7 @@ final class URLS_Database extends Table {
 	 *
 	 * @var string
 	 */
-	protected $table_definition = <<<EOD
+	protected $table_definition = '
 	CREATE TABLE %s (
 		id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 		type VARCHAR(20) NOT NULL,
@@ -46,7 +46,7 @@ final class URLS_Database extends Table {
 		local_path_destination TEXT NULL DEFAULT NULL,
 		indexed TINYINT(1) NOT NULL DEFAULT 0,
 		deployed TINYINT(1) NOT NULL DEFAULT 0,
-		status varchar(20) NOT NULL,
+		status VARCHAR(20) NOT NULL,
 		priority TINYINT(4) NOT NULL DEFAULT 0,
 		source VARCHAR(100) NOT NULL,
 		last_modified DATETIME NULL DEFAULT NULL,
@@ -54,8 +54,9 @@ final class URLS_Database extends Table {
 		updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 		PRIMARY KEY  (id),
 		UNIQUE KEY url_hash_index (url_hash)
-		) %s;
-	EOD;
+	) %s;
+	';
+
 
 
 	/**

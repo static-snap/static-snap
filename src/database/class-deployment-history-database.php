@@ -26,7 +26,7 @@ final class Deployment_History_Database extends Table {
 	 *
 	 * @var string
 	 */
-	protected $table_definition = <<<EOD
+	protected $table_definition = '
 	CREATE TABLE %s (
 		id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 		environment_id INT(11) UNSIGNED NULL DEFAULT NULL,
@@ -37,8 +37,9 @@ final class Deployment_History_Database extends Table {
 		status_information TEXT NULL DEFAULT NULL,
 		created_by INT(11) UNSIGNED NULL DEFAULT NULL,
 		PRIMARY KEY  (id)
-		) %s;
-	EOD;
+	) %s;
+	';
+
 
 
 	public const RUNNING   = 1;

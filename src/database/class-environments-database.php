@@ -27,20 +27,20 @@ final class Environments_Database extends Table {
 	 *
 	 * @var string
 	 */
-	protected $table_definition = <<<EOD
+	protected $table_definition = '
 	CREATE TABLE %s (
 		id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 		name VARCHAR(255) NOT NULL,
 		type VARCHAR(255) NOT NULL,
-		destination_type VARCHAR(20) NOT NULL default 'relative',
-		destination_path TEXT NOT NULL default '/',
+		destination_type VARCHAR(20) NOT NULL default \'relative\',
+		destination_path TEXT NOT NULL default \'/\',
 		settings TEXT NULL,
 		created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 		PRIMARY KEY  (id),
 		UNIQUE KEY name_index (name)
 		) %s;
-	EOD;
+	';
 
 	/**
 	 * Get all environments
