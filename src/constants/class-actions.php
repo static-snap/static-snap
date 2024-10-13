@@ -1,6 +1,6 @@
 <?php
 /**
- * Class Filters
+ * Class Actions
  *
  * @package StaticSnap
  */
@@ -10,7 +10,7 @@ namespace StaticSnap\Constants;
 use StaticSnap\Config\Plugin;
 
 /**
- * This class is used to define all the filters used in the plugin
+ * This class is used to define all actions used in the plugin
  */
 abstract class Actions {
 
