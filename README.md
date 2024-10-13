@@ -54,6 +54,7 @@ Within your WordPress installation, navigate to `wp-content/plugins` and run the
 ````bash
 git clone https://github.com/static-snap/static-snap.git
 cd static-snap
+```
 
 To install all the necessary dependencies, run the following commands:
 ```bash
