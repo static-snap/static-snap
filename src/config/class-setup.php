@@ -93,9 +93,7 @@ final class Setup {
 		URLS_Database::instance()->drop_table();
 		Environments_Database::instance()->drop_table();
 
-		// remove all options
+		// remove all options.
 		delete_option( Plugin::SLUG );
-
-
 	}
 }

@@ -68,6 +68,9 @@ abstract class Table {
 		dbDelta( $sql );
 	}
 
+	/**
+	 * Drop the table.
+	 */
 	public function drop_table() {
 		global $wpdb;
 		$table_name = $this->get_table_name();
