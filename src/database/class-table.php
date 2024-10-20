@@ -68,6 +68,13 @@ abstract class Table {
 		dbDelta( $sql );
 	}
 
+	public function drop_table() {
+		global $wpdb;
+		$table_name = $this->get_table_name();
+		// phpcs:ignore
+		$wpdb->query( "DROP TABLE IF EXISTS $table_name" );
+	}
+
 	/**
 	 * Truncate the table.
 	 */

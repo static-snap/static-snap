@@ -7,7 +7,10 @@
 
 namespace StaticSnap\Config;
 
+use StaticSnap\Database\Deployment_History_Database;
 use StaticSnap\Database\Environments_Database;
+use StaticSnap\Database\Replacements_URLS_Database;
+use StaticSnap\Database\URLS_Database;
 use StaticSnap\Environments\Environment;
 
 
@@ -62,13 +65,6 @@ final class Setup {
 				Environments_Database::instance()->insert( $environment );
 			}
 		}
-
-		/**
-		 * Use this to add a database table after the plugin is activated for example
-		 */
-
-		// Clear the permalinks.
-		flush_rewrite_rules();
 	}
 
 	/**
@@ -80,16 +76,6 @@ final class Setup {
 		if ( ! current_user_can( 'activate_plugins' ) ) {
 			return;
 		}
-
-		/**
-		 * Use this to register a function which will be executed when the plugin is deactivated
-		 */
-
-		// Clear the permalinks.
-		flush_rewrite_rules();
-
-		// Uncomment the following line to see the function in action
-		// exit( var_dump( $_GET ) );.
 	}
 
 	/**
@@ -102,11 +88,14 @@ final class Setup {
 			return;
 		}
 
-		/**
-		 * Use this to remove plugin data and residues after the plugin is uninstalled for example
-		 */
+		Replacements_URLS_Database::instance()->drop_table();
+		Deployment_History_Database::instance()->drop_table();
+		URLS_Database::instance()->drop_table();
+		Environments_Database::instance()->drop_table();
 
-		// Uncomment the following line to see the function in action.
-		// exit( var_dump( $_GET ) );.
+		// remove all options
+		delete_option( Plugin::SLUG );
+
+
 	}
 }
