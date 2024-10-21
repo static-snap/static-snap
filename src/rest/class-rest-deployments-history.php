@@ -198,8 +198,9 @@ final class Rest_Deployments_History extends WP_REST_Controller {
 		}
 
 		$zip_file_url = $environment->get_build_path() . '/' . $zip_file;
-
 		$zip_file_url = str_replace( ABSPATH, site_url( '/' ), $zip_file_url );
+		// add deployment id to the URL to avoid caching.
+		$zip_file_url = add_query_arg( 'deployment_id', $deployment['id'], $zip_file_url );
 
 		return rest_ensure_response(
 			array(
