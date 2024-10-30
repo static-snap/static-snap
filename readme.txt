@@ -3,7 +3,7 @@ Contributors: staticsnap
 Tags: static site, static generator, performance, SEO
 Requires at least: 6.5.0
 Tested up to: 6.5.0
-Stable tag: 0.2.1
+Stable tag: 0.2.2
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
