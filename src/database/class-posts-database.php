@@ -105,15 +105,21 @@ final class Posts_Database {
 		}
 		// get all post types that have archive pages.
 		$post_types = $this->archive_post_types();
-		$query      = sprintf(
-			"SELECT post_type, YEAR(post_date) AS year, MONTH(post_date) AS month, count(ID) as posts FROM $wpdb->posts WHERE post_type IN (%s) AND post_status IN (%s) GROUP BY post_type, YEAR(post_date), MONTH(post_date) ORDER BY post_type, year, month",
-			Table::prepare_array( $post_types ),
-			Table::prepare_array( $post_statuses )
-		);
+
 		// phpcs:ignore
-		$dates      = $wpdb->get_results(
+		$dates = $wpdb->get_results(
 			// phpcs:ignore
-			$query,
+			$wpdb->prepare(
+				"SELECT post_type, YEAR(post_date) AS year, MONTH(post_date) AS month, count(ID) as posts FROM $wpdb->posts WHERE post_type IN (" .
+				\implode( ', ', \array_fill( 0, \count( $post_types ), '%s' ) )
+				. ') AND post_status IN (' .
+				\implode( ', ', \array_fill( 0, \count( $post_statuses ), '%s' ) )
+				. ') GROUP BY post_type, YEAR(post_date), MONTH(post_date) ORDER BY post_type, year, month',
+				\array_merge(
+					$post_types,
+					$post_statuses
+				)
+			),
 			ARRAY_A
 		);
 		return $dates;
