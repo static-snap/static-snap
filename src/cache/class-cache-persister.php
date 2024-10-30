@@ -7,6 +7,8 @@
 
 namespace StaticSnap\Cache;
 
+use StaticSnap\Config\Plugin;
+
 /**
  * Class to manage cache.
  */
@@ -39,7 +41,7 @@ abstract class Cache_Persister {
 	 */
 	public function __construct( $duration = HOUR_IN_SECONDS ) {
 		$this->cache_duration = $duration;
-		$this->cache_key      = strtolower( str_replace( '\\', '_', get_class( $this ) ) );
+		$this->cache_key      = Plugin::BASE_NAME . '_' . strtolower( str_replace( '\\', '_', get_class( $this ) ) );
 		$this->load_cache();
 	}
 
