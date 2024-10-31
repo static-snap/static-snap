@@ -47,7 +47,6 @@
     "symfony/http-client": "^5.4",
     "wp-coding-standards/wpcs": "*",
     "yoast/phpunit-polyfills": "^2.0",
-    "art4/requests-psr18-adapter": "*",
     "guzzlehttp/psr7": "^2.7",
     "guzzlehttp/guzzle": "^7.9"
   },

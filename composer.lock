@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fc6e491b3c830784eb34a0266e41856d",
+    "content-hash": "d120b4e3d8bd312ce76d79f8b4109b20",
     "packages": [],
     "packages-dev": [
         {
@@ -80,76 +80,6 @@
                 "source": "https://github.com/algolia/algoliasearch-client-php/tree/3.4.1"
             },
             "time": "2023-08-28T14:34:04+00:00"
-        },
-        {
-            "name": "art4/requests-psr18-adapter",
-            "version": "1.3.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Art4/WP-Requests-PSR18-Adapter.git",
-                "reference": "e2165d066152bf50bc6292426012b4b170f3b54f"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Art4/WP-Requests-PSR18-Adapter/zipball/e2165d066152bf50bc6292426012b4b170f3b54f",
-                "reference": "e2165d066152bf50bc6292426012b4b170f3b54f",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^7.2 || ~8.0.0 || ~8.1.0 || ~8.2.0 || ~8.3.0 || ~8.4.0",
-                "psr/http-client": "^1.0",
-                "psr/http-factory": "^1.0",
-                "psr/http-message": "^1.1 || ^2.0",
-                "rmccue/requests": "^1.8 || ^2.0"
-            },
-            "provide": {
-                "psr/http-client-implementation": "^1.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.4",
-                "phpstan/phpstan": "^1.10",
-                "phpunit/phpunit": "^8 || ^9 || ^10",
-                "yoast/phpunit-polyfills": "^2"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "v1-compat/autoload.php"
-                ],
-                "psr-4": {
-                    "Art4\\Requests\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0-or-later"
-            ],
-            "authors": [
-                {
-                    "name": "Art4",
-                    "email": "art4@wlabs.de",
-                    "homepage": "https://wlabs.de"
-                }
-            ],
-            "description": "Use WordPress/Requests as a PSR-18 HTTP client",
-            "homepage": "https://github.com/Art4/WP-Requests-PSR18-Adapter",
-            "keywords": [
-                "http",
-                "http-client",
-                "http-message",
-                "psr",
-                "psr-18",
-                "psr-7",
-                "request",
-                "requests",
-                "response",
-                "wordpress"
-            ],
-            "support": {
-                "issues": "https://github.com/Art4/WP-Requests-PSR18-Adapter/issues",
-                "source": "https://github.com/Art4/WP-Requests-PSR18-Adapter/tree/1.3.0"
-            },
-            "time": "2024-10-14T08:08:14+00:00"
         },
         {
             "name": "composer/package-versions-deprecated",
@@ -2559,93 +2489,6 @@
                 "source": "https://github.com/ralouphie/getallheaders/tree/develop"
             },
             "time": "2019-03-08T08:55:37+00:00"
-        },
-        {
-            "name": "rmccue/requests",
-            "version": "v2.0.13",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/WordPress/Requests.git",
-                "reference": "8bc4aae49f5b2bd0a9f42e920e646ec5b2b0a68a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/WordPress/Requests/zipball/8bc4aae49f5b2bd0a9f42e920e646ec5b2b0a68a",
-                "reference": "8bc4aae49f5b2bd0a9f42e920e646ec5b2b0a68a",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "php": ">=5.6"
-            },
-            "require-dev": {
-                "dealerdirect/phpcodesniffer-composer-installer": "^0.7",
-                "php-parallel-lint/php-console-highlighter": "^0.5.0",
-                "php-parallel-lint/php-parallel-lint": "^1.3.1",
-                "phpcompatibility/php-compatibility": "^9.0",
-                "requests/test-server": "dev-main",
-                "roave/security-advisories": "dev-latest",
-                "squizlabs/php_codesniffer": "^3.6",
-                "wp-coding-standards/wpcs": "^2.0",
-                "yoast/phpunit-polyfills": "^1.0.0"
-            },
-            "suggest": {
-                "art4/requests-psr18-adapter": "For using Requests as a PSR-18 HTTP Client",
-                "ext-curl": "For improved performance",
-                "ext-openssl": "For secure transport support",
-                "ext-zlib": "For improved performance when decompressing encoded streams"
-            },
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "library/Deprecated.php"
-                ],
-                "psr-4": {
-                    "WpOrg\\Requests\\": "src/"
-                },
-                "classmap": [
-                    "library/Requests.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "ISC"
-            ],
-            "authors": [
-                {
-                    "name": "Ryan McCue",
-                    "homepage": "https://rmccue.io/"
-                },
-                {
-                    "name": "Alain Schlesser",
-                    "homepage": "https://github.com/schlessera"
-                },
-                {
-                    "name": "Juliette Reinders Folmer",
-                    "homepage": "https://github.com/jrfnl"
-                },
-                {
-                    "name": "Contributors",
-                    "homepage": "https://github.com/WordPress/Requests/graphs/contributors"
-                }
-            ],
-            "description": "A HTTP library written in PHP, for human beings.",
-            "homepage": "https://requests.ryanmccue.info/",
-            "keywords": [
-                "curl",
-                "fsockopen",
-                "http",
-                "idna",
-                "ipv6",
-                "iri",
-                "sockets"
-            ],
-            "support": {
-                "docs": "https://requests.ryanmccue.info/",
-                "issues": "https://github.com/WordPress/Requests/issues",
-                "source": "https://github.com/WordPress/Requests"
-            },
-            "time": "2024-10-29T10:04:19+00:00"
         },
         {
             "name": "sebastian/cli-parser",
