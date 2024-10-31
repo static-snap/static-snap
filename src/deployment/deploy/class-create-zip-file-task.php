@@ -9,7 +9,7 @@ namespace StaticSnap\Deployment\Deploy;
 
 use StaticSnap\Deployment\Task;
 use StaticSnap\Database\URLS_Database;
-
+use WP;
 
 /**
  * Create ZIP File Task class
@@ -48,7 +48,15 @@ final class Create_ZIP_File_Task extends Task {
 		while ( $urls ) {
 
 			foreach ( $urls as $url ) {
+				if ( ! $url->local_path_destination ) {
+					$database->set_deployed( $url->id );
+					continue;
+				}
 				$file = new \SplFileInfo( $url->local_path_destination );
+				if ( ! $file->isFile() ) {
+					$database->set_deployed( $url->id );
+					continue;
+				}
 				// remove ROOT path from the file path.
 				$file_entry_name = str_replace( $this->deployment_process->get_environment()->get_build_path() . DIRECTORY_SEPARATOR, '', $url->local_path_destination );
 				$zip->addFile( $file->getRealPath(), $file_entry_name );
