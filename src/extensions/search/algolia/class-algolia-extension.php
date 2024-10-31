@@ -10,8 +10,11 @@ namespace StaticSnap\Extensions\Search\Algolia;
 use StaticSnap\Config\Options;
 use StaticSnap\Search\Search_Extension_Base;
 
+use StaticSnapVendor\Algolia\AlgoliaSearch\Algolia;
 use StaticSnapVendor\Algolia\AlgoliaSearch\SearchClient;
 use StaticSnap\Constants\Filters;
+use StaticSnapVendor\Algolia\AlgoliaSearch\Http\CurlHttpClient;
+
 // fix for the issue with the Algolia client if stream_for is not defined.
 if ( ! function_exists( '\StaticSnapVendor\Algolia\AlgoliaSearch\Http\Psr7\stream_for' ) ) {
 	require_once STATIC_SNAP_PLUGIN_DIR . '/vendor_prefixed/algolia/algoliasearch-client-php/src/Http/Psr7/functions.php';
@@ -65,7 +68,7 @@ final class Algolia_Extension extends Search_Extension_Base {
 	 */
 	public static function get_client() {
 		if ( null === self::$search_client ) {
-			$search_options      = Options::instance()->get(
+			$search_options = Options::instance()->get(
 				'search.settings',
 				array(
 					'enabled'                => false,
@@ -74,6 +77,7 @@ final class Algolia_Extension extends Search_Extension_Base {
 					'_algolia_admin_key'     => '',
 				)
 			);
+
 			self::$search_client = SearchClient::create( $search_options['algolia_application_id'], $search_options['_algolia_admin_key'] );
 		}
 		return self::$search_client;

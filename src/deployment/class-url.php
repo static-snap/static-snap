@@ -418,7 +418,7 @@ class URL implements Deployment_URL_Interface {
 
 	/**
 	 * Get file local destination.
-	 * example http://localhost/test-url/ will be saved to
+	 * example http://example.com/test-url/ will be saved to
 	 * /var/www/html/wp-content/uploads/static-snap/tmp/test-url/index.html
 	 *
 	 * @param string $destination Destination.

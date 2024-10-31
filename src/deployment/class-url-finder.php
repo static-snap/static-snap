@@ -45,7 +45,7 @@ final class URL_Finder {
 	 */
 	public function find_urls( string $content ): string {
 		// find anchors links in the content that are in the same WordPress domain or are relative.
-		// example url http://localhost/2023/12/07/.
+		// example url http://example.com/2023/12/07/.
 		$domain   = wp_parse_url( home_url() )['host'];
 		$patterns = array(
 			'/<a\s+(?:[^>]*?\s+)?href=(["\'])(?:https?:\/\/' . preg_quote( $domain, '/' ) . '|\/)(.*?)\1/',

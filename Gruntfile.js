@@ -45,6 +45,8 @@ module.exports = function (grunt) {
               'LICENSE',
               'src/**',
               'vendor_prefixed/**/*.php',
+              '!vendor_prefixed/mustache/mustache/bin/**',
+              '!vendor_prefixed/mustache/mustache/src/Mustache/Cache/NoopCache.php',
               'assets/**',
               '!src/local-dev/class-local-dev-local.php',
               '!src/local-dev/class-local-dev-local.php.default',

@@ -118,7 +118,10 @@ trait Renderable {
 
 		$this->template_engine = new Mustache_Engine(
 			array(
-				'entity_flags' => ENT_QUOTES,
+				'entity_flags'           => ENT_QUOTES,
+				'cache'                  => STATIC_SNAP_PLUGIN_DIR . '/tmp/cache/mustache',
+				'cache_file_mode'        => 0666,
+				'cache_lambda_templates' => true,
 			)
 		);
 	}

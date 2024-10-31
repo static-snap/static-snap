@@ -28,12 +28,8 @@ return [
     'finders' => [
 		// WP-Background-Processing
 		Finder::create()->files()->in( 'vendor/deliciousbrains/wp-background-processing' )->name( [ '*.php', 'license.txt', 'composer.json' ] ),
-		// symfony
-		Finder::create()->files()->in( 'vendor/symfony' )->name( [ '*.php', 'LICENSE', 'composer.json' ] ),
 		// Guzzle
 		Finder::create()->files()->in( 'vendor/guzzlehttp' )->name( [ '*.php', 'LICENSE', 'composer.json' ] ),
-		Finder::create()->files()->in( 'vendor/http-interop/http-factory-guzzle' )->name( [ '*.php', 'LICENSE', 'composer.json' ] ),
-
 		// mustache
 		Finder::create()->files()->in( 'vendor/mustache/mustache' )->name( [ '*.php', 'LICENSE', 'composer.json' ] ),
 		// prs
@@ -41,20 +37,9 @@ return [
 		Finder::create()->files()->in( 'vendor/psr/http-client' )->name( [ '*.php', 'LICENSE', 'composer.json' ] ),
 		Finder::create()->files()->in( 'vendor/psr/http-factory' )->name( [ '*.php', 'LICENSE', 'composer.json' ] ),
 		Finder::create()->files()->in( 'vendor/psr/http-message' )->name( [ '*.php', 'LICENSE', 'composer.json' ] ),
-		Finder::create()->files()->in( 'vendor/psr/cache' )->name( [ '*.php', 'LICENSE', 'composer.json' ] ),
 		Finder::create()->files()->in( 'vendor/psr/log' )->name( [ '*.php', 'LICENSE', 'composer.json' ] ),
-
-		// php-http
-		Finder::create()->files()->in( 'vendor/php-http' )->name( [ '*.php', 'LICENSE', 'composer.json' ] ),
-
 		// algolia
 		Finder::create()->files()->in( 'vendor/algolia/algoliasearch-client-php' )->name( [ '*.php', 'LICENSE', 'composer.json' ] ),
-
-
-		// knplabs github-api
-		Finder::create()->files()->in( 'vendor/knplabs/github-api' )->name( [ '*.php', 'LICENSE', 'composer.json' ] ),
-
-
     ],
 
     // List of excluded files, i.e. files for which the content will be left untouched.

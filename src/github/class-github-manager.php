@@ -9,7 +9,7 @@ namespace StaticSnap\Github;
 
 use StaticSnap\API\API;
 use StaticSnapVendor\Github\AuthMethod;
-use StaticSnapVendor\Github\Client;
+
 
 use StaticSnap\Cache\Cache_Persister;
 use StaticSnap\Connect\Connect;
@@ -97,21 +97,6 @@ final class Github_Manager extends Cache_Persister {
 
 
 	/**
-	 * Authenticate the client using the access token.
-	 *
-	 * @param Client $client GitHub client.
-	 * @param string $token Access token.
-	 * @throws \Exception If there is an error authenticating.
-	 */
-	private function authenticate_client( $client, $token ) {
-		try {
-			$client->authenticate( $token, null, AuthMethod::ACCESS_TOKEN );
-		} catch ( \Exception $e ) {
-			throw new \Exception( 'Error authenticating: ' . esc_html( $e->getMessage() ) );
-		}
-	}
-
-	/**
 	 * Get the content of the action file.
 	 *
 	 * @return string
@@ -125,13 +110,13 @@ final class Github_Manager extends Cache_Persister {
 	/**
 	 * Update or create the action file in the repository.
 	 *
-	 * @param Client $client GitHub client.
-	 * @param string $owner Repository owner.
-	 * @param string $repo Repository name.
-	 * @param string $branch Branch name.
-	 * @param string $filename File name.
-	 * @param string $action_file_content Content of the action file.
-	 * @param array  $contents Existing file contents.
+	 * @param Github_Api_Client $client GitHub client.
+	 * @param string            $owner Repository owner.
+	 * @param string            $repo Repository name.
+	 * @param string            $branch Branch name.
+	 * @param string            $filename File name.
+	 * @param string            $action_file_content Content of the action file.
+	 * @param array             $contents Existing file contents.
 	 * @throws \Exception If there is an error updating the file.
 	 */
 	private function update_or_create_file( $client, $owner, $repo, $branch, $filename, $action_file_content, $contents ) {
@@ -143,7 +128,7 @@ final class Github_Manager extends Cache_Persister {
 		}
 
 		try {
-			$client->api( 'repo' )->contents()->update( $owner, $repo, $filename, $action_file_content, __( 'Update Static Snap action file', 'static-snap' ), $contents['sha'], $branch );
+			$client->update_file( $owner, $repo, $filename, $action_file_content, __( 'Update Static Snap action file', 'static-snap' ), $contents['sha'], $branch );
 		} catch ( \Exception $e ) {
 			throw new \Exception( 'Error updating file: ' . esc_html( $e->getMessage() ) );
 		}
@@ -153,17 +138,17 @@ final class Github_Manager extends Cache_Persister {
 	/**
 	 * Handle file not found
 	 *
-	 * @param Client $client GitHub client.
-	 * @param string $owner Repository owner.
-	 * @param string $repo Repository name.
-	 * @param string $branch Branch name.
-	 * @param string $filename File name.
-	 * @param string $action_file_content Content of the action file.
+	 * @param Github_Api_Client $client GitHub client.
+	 * @param string            $owner Repository owner.
+	 * @param string            $repo Repository name.
+	 * @param string            $branch Branch name.
+	 * @param string            $filename File name.
+	 * @param string            $action_file_content Content of the action file.
 	 * @throws \Exception If there is an error creating the file.
 	 */
 	private function handle_file_not_found( $client, $owner, $repo, $branch, $filename, $action_file_content ) {
 		try {
-			$client->api( 'repo' )->contents()->create( $owner, $repo, $filename, $action_file_content, __( 'Add Static Snap action file', 'static-snap' ), $branch );
+			$uploaded = $client->upload_file( $owner, $repo, $branch, $filename, $action_file_content, __( 'Add Static Snap action file', 'static-snap' ) );
 		} catch ( \Exception $e ) {
 			if ( $e->getCode() === 404 ) {
 				$this->create_branch_and_file( $client, $owner, $repo, $branch, $filename, $action_file_content );
@@ -176,20 +161,21 @@ final class Github_Manager extends Cache_Persister {
 	/**
 	 * Create a branch and file in the repository.
 	 *
-	 * @param Client $client GitHub client.
-	 * @param string $owner Repository owner.
-	 * @param string $repo Repository name.
-	 * @param string $branch Branch name.
-	 * @param string $filename File name.
-	 * @param string $action_file_content Content of the action file.
+	 * @param Github_Api_Client $client GitHub client.
+	 * @param string            $owner Repository owner.
+	 * @param string            $repo Repository name.
+	 * @param string            $branch Branch name.
+	 * @param string            $filename File name.
+	 * @param string            $action_file_content Content of the action file.
 	 * @throws \Exception If there is an error creating the branch and file.
 	 */
 	private function create_branch_and_file( $client, $owner, $repo, $branch, $filename, $action_file_content ) {
-		$branches = $client->api( 'repo' )->branches( $owner, $repo );
+		$branches = $client->get_branches( $owner, $repo );
+
 		$base_sha = $branches[0]['commit']['sha'];
 
 		try {
-			$client->api( 'git' )->references()->create(
+			$client->create_reference(
 				$owner,
 				$repo,
 				array(
@@ -197,7 +183,15 @@ final class Github_Manager extends Cache_Persister {
 					'sha' => $base_sha,
 				)
 			);
-			$client->api( 'repo' )->contents()->create( $owner, $repo, $filename, $action_file_content, __( 'Add Static Snap action file', 'static-snap' ), $branch );
+
+			try {
+				$contents = $client->get_file_contents( $owner, $repo, $filename, $branch );
+			} catch ( \Exception $e ) {
+				$client->create_file( $owner, $repo, $filename, $action_file_content, __( 'Add Static Snap action file', 'static-snap' ), $branch );
+				return;
+			}
+			$client->update_file( $owner, $repo, $filename, $action_file_content, __( 'Update Static Snap action file', 'static-snap' ), $contents['sha'], $branch );
+
 		} catch ( \Exception $e ) {
 			throw new \Exception( 'Error creating branch and file: ' . esc_html( $e->getMessage() ) );
 		}
@@ -224,15 +218,14 @@ final class Github_Manager extends Cache_Persister {
 		$token    = $response['data']['token'];
 		$owner    = $response['data']['login'];
 
-		$client = new Client();
-
-		$this->authenticate_client( $client, $token );
+		$client = new Github_Api_Client( $token );
 
 		$filename            = '.github/workflows/static-snap-site-deploy.yml';
 		$action_file_content = $this->get_action_file_content();
 
 		try {
-			$contents = $client->api( 'repo' )->contents()->show( $owner, $repo, $filename, $branch );
+			$contents = $client->get_file_contents( $owner, $repo, $filename, $branch );
+
 			$this->update_or_create_file( $client, $owner, $repo, $branch, $filename, $action_file_content, $contents );
 		} catch ( \Exception $e ) {
 			if ( $e->getCode() === 404 ) {
@@ -267,9 +260,7 @@ final class Github_Manager extends Cache_Persister {
 		$token    = $response['data']['token'];
 		$owner    = $response['data']['login'];
 
-		$client = new Client();
-
-		$this->authenticate_client( $client, $token );
+		$client = new Github_Api_Client( $token );
 
 		/**
 		 * Create a release
@@ -281,7 +272,7 @@ final class Github_Manager extends Cache_Persister {
 		$name = sprintf( __( 'Static Snap Release for branch %s', 'static-snap' ), $branch );
 		$body = __( 'ZIP release from Static Snap.', 'static-snap' );
 
-		$release = $client->api( 'repo' )->releases()->create(
+		$release = $client->create_release(
 			$owner,
 			$repo,
 			array(
@@ -295,8 +286,6 @@ final class Github_Manager extends Cache_Persister {
 		);
 
 		$release_id = $release['id'];
-
-		// Upload asset using cURL.
 
 		// Initialize GuzzleHttp Client.
 		$guzzle_client = new \StaticSnapVendor\GuzzleHttp\Client();
@@ -328,7 +317,7 @@ final class Github_Manager extends Cache_Persister {
 			return false;
 		}
 
-		$edit = $client->api( 'repo' )->releases()->edit(
+		$client->edit_release(
 			$owner,
 			$repo,
 			$release_id,
