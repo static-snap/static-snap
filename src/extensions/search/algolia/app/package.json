@@ -17,7 +17,7 @@
     "build": "tsc && NODE_ENV=production wp-scripts build"
   },
   "dependencies": {
-    "@staticsnap/frontend": "workspace:*",
+    "@staticsnap/frontend": "*",
     "algoliasearch": "^4.23.3",
     "instantsearch.js": "^4.69.0"
   }

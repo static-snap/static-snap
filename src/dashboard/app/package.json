@@ -12,7 +12,7 @@
     "@iconify/react": "^4.1.1",
     "@mui/lab": "^5.0.0-alpha.170",
     "@mui/material": "^5.15.15",
-    "@staticsnap/frontend": "^0.3.2",
+    "@staticsnap/frontend": "*",
     "@textea/json-viewer": "^3.4.0",
     "@wordpress/i18n": "^4.51.0",
     "react": "^18.2.0",
