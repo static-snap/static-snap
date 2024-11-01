@@ -13,6 +13,7 @@ use StaticSnap\Database\Environments_Database;
 use StaticSnap\Interfaces\Deployment_Interface;
 use StaticSnap\Config\Options;
 use StaticSnap\Constants\Actions;
+use StaticSnap\Constants\Build_Type;
 use StaticSnap\Constants\Filters;
 use StaticSnap\Database\Deployment_History_Database;
 use StaticSnap\Interfaces\Environment_Interface;
@@ -90,6 +91,12 @@ final class Deployment_Process extends WP_Background_Process implements Deployme
 	 */
 	protected $prefix = 'static_snap';
 
+	/**
+	 * Build type
+	 *
+	 * @var string
+	 */
+	private $build_type = Build_Type::FULL;
 
 	/**
 	 * Constructor
@@ -261,10 +268,12 @@ final class Deployment_Process extends WP_Background_Process implements Deployme
 	 * Complete the process
 	 *
 	 * @param Environment_Interface $environment Environment.
+	 * @param string                $build_type build_type.
 	 * @return bool
 	 */
-	public function run( Environment_Interface $environment ): bool {
+	public function run( Environment_Interface $environment, $build_type = Build_Type::FULL ): bool {
 		$this->current_environment = $environment;
+		$this->build_type          = $build_type;
 
 		// if already active return.
 		if ( $this->is_active() ) {
@@ -287,14 +296,19 @@ final class Deployment_Process extends WP_Background_Process implements Deployme
 	 * Get the number of items to be processed in a single batch.
 	 *
 	 * @param Environment_Interface $environment Environment.
-	 * @return int
+	 * @param string                $build_type build_type.
+	 *
+	 * @return bool
+	 *
 	 * @throws \Exception If a task is not found.
 	 */
-	public function run_cli( Environment_Interface $environment ): bool {
+	public function run_cli( Environment_Interface $environment, $build_type = Build_Type::FULL ): bool {
 		// if already active return.
 		if ( $this->is_active() ) {
 			return false;
 		}
+
+		$this->build_type = $build_type;
 
 		$all_tasks = $this->task_manager->get_tasks();
 
@@ -388,5 +402,14 @@ final class Deployment_Process extends WP_Background_Process implements Deployme
 		$this->history->pause_history( 0 );
 		// Do something with the data.
 		parent::pause();
+	}
+
+	/**
+	 * Get build type
+	 *
+	 * @return string
+	 */
+	public function get_build_type(): string {
+		return $this->build_type;
 	}
 }

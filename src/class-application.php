@@ -163,11 +163,12 @@ final class Application {
 	 * Run deployment
 	 *
 	 * @param Environment_Interface $environment environment.
+	 * @param string                $build_type build type.
 	 * @return bool
 	 */
-	public function run_deployment( Environment_Interface $environment ) {
+	public function run_deployment( Environment_Interface $environment, $build_type = Deployment_Process::FULL_BUILD ): bool {
 
-		return $this->deployment->run( $environment );
+		return $this->deployment->run( $environment, $build_type );
 	}
 
 

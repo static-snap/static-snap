@@ -8,6 +8,7 @@
 namespace StaticSnap\Environments;
 
 use StaticSnap\Application;
+use StaticSnap\Constants\Build_Type;
 use StaticSnap\Constants\Filters;
 use StaticSnap\Deployment\Deployment_Task_Manager;
 use StaticSnap\Filesystem\Filesystem;
@@ -261,10 +262,12 @@ final class Environment implements Environment_Interface {
 	/**
 	 * Start deploy process
 	 *
+	 * @param string $build_type Build type.
+	 *
 	 * @return bool
 	 */
-	public function publish(): bool {
-		return Application::instance()->run_deployment( $this );
+	public function publish( $build_type = Build_Type::FULL ): bool {
+		return Application::instance()->run_deployment( $this, $build_type );
 	}
 
 	/**

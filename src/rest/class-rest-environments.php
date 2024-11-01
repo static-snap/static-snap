@@ -9,6 +9,7 @@ namespace StaticSnap\Rest;
 
 use WP_REST_Controller;
 use StaticSnap\Application;
+use StaticSnap\Constants\Build_Type;
 use StaticSnap\Database\Environments_Database;
 use StaticSnap\Environments\Environment;
 use StaticSnap\Environments\Environment_Type_Factory;
@@ -196,6 +197,12 @@ final class Rest_Environments extends WP_REST_Controller {
 	 */
 	public function publish( $request ) {
 		$environment = Environments_Database::instance()->get_by_id( $request['id'] );
+		$build_type  = $request['build_type'] ?? Build_Type::FULL;
+
+		if ( ! Build_Type::is_valid_build_type( $build_type ) ) {
+			return rest_ensure_response( new \WP_Error( 'invalid_build_type', 'Invalid build type', array( 'status' => 400 ) ) );
+		}
+
 		/**
 		 * Steps are
 		 * Publish
@@ -205,7 +212,7 @@ final class Rest_Environments extends WP_REST_Controller {
 		 *
 		 * @see StaticSnap\Environments\Environment::deploy
 		 */
-		return rest_ensure_response( $environment->publish() );
+		return rest_ensure_response( $environment->publish( $build_type ) );
 	}
 
 	/**
