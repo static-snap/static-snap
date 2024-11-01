@@ -35,15 +35,16 @@ final class URL_Finder {
 			return;
 		}
 		// run the url finder in the content before other filters.
-		add_filter( Filters::POST_URL_CONTENT, array( $this, 'find_urls' ), 1, 1 );
+		add_filter( Filters::POST_URL_CONTENT, array( $this, 'find_urls' ), 1, 2 );
 	}
 	/**
 	 * Find urls in the content and save them to the urls database.
 	 *
 	 * @param string $content Content.
+	 * @param object $content_url URL.
 	 * @return string
 	 */
-	public function find_urls( string $content ): string {
+	public function find_urls( string $content, $content_url ): string {
 		// find anchors links in the content that are in the same WordPress domain or are relative.
 		// example url http://example.com/2023/12/07/.
 		$domain   = wp_parse_url( home_url() )['host'];
@@ -92,7 +93,7 @@ final class URL_Finder {
 						$full_url = trailingslashit( $full_url );
 					}
 
-					$urls[] = new URL( $full_url, null, 'published', 'URL_Finder::find_urls' );
+					$urls[] = new URL( $full_url, null, 'published', 'URL_Finder::find_urls::' . $content_url->id );
 				}
 				$urls_database = URLS_Database::instance();
 				$urls          = apply_filters( Filters::BEFORE_SAVE_POST_URLS, $urls );
