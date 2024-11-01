@@ -9,6 +9,7 @@ namespace StaticSnap\Deployment\Build;
 
 use StaticSnap\Deployment\Task;
 use StaticSnap\Constants\Actions;
+use StaticSnap\Constants\Build_Type;
 use StaticSnap\Constants\Filters;
 use StaticSnap\Database\URLS_Database;
 use StaticSnap\Deployment\Post_URL;
@@ -37,9 +38,22 @@ final class Get_Posts_Urls_Task extends Task {
 	 * @return bool
 	 */
 	public function perform(): bool {
+		$this->deployment_process->get_environment();
+
+		$build_type = $this->deployment_process->get_build_type();
+		$extra_args = array();
+		if ( Build_Type::INCREMENTAL === $build_type ) {
+			$last_build_datetime = $this->deployment_process->get_last_build_date()->format( 'Y-m-d H:i:s' );
+			$extra_args['date_query'] = array(
+				'column' => 'post_modified_gmt',
+				'after' => $last_build_datetime,
+			);
+		}
+
 		$post_database = Posts_Database::instance();
 
-		$posts = $post_database->get_all( array( 'publish', 'inherit' ) );
+		$posts = $post_database->get_all( array( 'publish', 'inherit' ), $extra_args );
+
 
 		$urls = array();
 
@@ -54,7 +68,6 @@ final class Get_Posts_Urls_Task extends Task {
 
 		if ( 'page' === $home_page_type ) {
 			$home = get_post( get_option( 'page_on_front' ) );
-
 			if ( $home ) {
 				$urls[] = new Post_URL( $home, 'Get_Posts_Urls_Task::perform' );
 			}

@@ -30,9 +30,10 @@ final class Posts_Database {
 	 * Count posts
 	 *
 	 * @param array $post_statuses Post statuses.
+	 * @param array $extra_args Extra args.
 	 * @return int
 	 */
-	public function count( $post_statuses = array( 'publish', 'inherit' ) ): int {
+	public function count( $post_statuses = array( 'publish', 'inherit' ), $extra_args = array() ): int {
 		$post_types = $this->post_types();
 
 		$args      = array(
@@ -41,7 +42,7 @@ final class Posts_Database {
 			'post_status'      => $post_statuses,
 			'suppress_filters' => true,
 		);
-		$the_query = new \WP_Query( $args );
+		$the_query = new \WP_Query( array_merge( $args, $extra_args ) );
 
 		return $the_query->found_posts;
 	}
@@ -50,9 +51,10 @@ final class Posts_Database {
 	 * Get posts
 	 *
 	 * @param array $post_statuses Post statuses.
+	 * @param array $extra_args Extra args.
 	 * @return array
 	 */
-	public function get_all( $post_statuses = array( 'publish', 'inherit' ) ): array {
+	public function get_all( $post_statuses = array( 'publish', 'inherit' ), $extra_args = array() ): array {
 
 		$post_types = $this->post_types();
 
@@ -62,7 +64,7 @@ final class Posts_Database {
 			'post_status'      => $post_statuses,
 			'suppress_filters' => true,
 		);
-		$the_query = new \WP_Query( $args );
+		$the_query = new \WP_Query( array_merge( $args, $extra_args ) );
 
 		return $the_query->posts;
 	}

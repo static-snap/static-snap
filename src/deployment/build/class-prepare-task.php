@@ -7,6 +7,7 @@
 
 namespace StaticSnap\Deployment\Build;
 
+use StaticSnap\Constants\Build_Type;
 use StaticSnap\Database\Replacements_URLS_Database;
 use StaticSnap\Deployment\Task;
 use StaticSnap\Database\URLS_Database;
@@ -39,6 +40,15 @@ final class Prepare_Task extends Task {
 	public function perform(): bool {
 
 		$path = $this->deployment_process->get_environment()->get_build_path();
+
+		$build_type = $this->deployment_process->get_build_type();
+
+		if ( Build_Type::INCREMENTAL === $build_type ) {
+			if ( ! is_dir( $path ) ) {
+				throw new \Exception( __('Incremental build path does not exist.', 'static-snap') );
+			}
+			return true;
+		}
 
 		$filesystem = new Filesystem();
 

@@ -8,6 +8,7 @@
 namespace StaticSnap\Database;
 
 use StaticSnap\Config\Plugin;
+use StaticSnap\Constants\Build_Type;
 
 /**
  * Deployment Process
@@ -30,6 +31,7 @@ final class Deployment_History_Database extends Table {
 	CREATE TABLE %s (
 		id INT(11) UNSIGNED NOT NULL AUTO_INCREMENT,
 		environment_id INT(11) UNSIGNED NULL DEFAULT NULL,
+		build_type VARCHAR(20) NULL DEFAULT "full",
 		status TINYINT(4) NOT NULL DEFAULT 0,
 		start_time INT(11) NULL DEFAULT NULL,
 		end_time INT(11) NULL DEFAULT NULL,
@@ -121,12 +123,12 @@ final class Deployment_History_Database extends Table {
 		return $result;
 	}
 
-		/**
-		 * Get last history
-		 *
-		 * @param int $id Environment ID.
-		 * @return array
-		 */
+	/**
+	 * Get last history
+	 *
+	 * @param int $id Environment ID.
+	 * @return array
+	 */
 	public function get_last_completed_history_by_environment( int $id ): array {
 		// use database.
 		global $wpdb;
@@ -176,6 +178,7 @@ final class Deployment_History_Database extends Table {
 			$table_name,
 			array(
 				'environment_id' => $history['environment_id'],
+				'build_type'     => $history['build_type'],
 				'status'         => $history['status'],
 				'start_time'     => $history['start_time'],
 				'end_time'       => $history['end_time'],
@@ -213,12 +216,14 @@ final class Deployment_History_Database extends Table {
 	 * Add history
 	 *
 	 * @param string $environment_id Environment ID.
+	 * @param string $build_type Build type.
 	 * @return void
 	 */
-	public function start_history( $environment_id ): void {
+	public function start_history( $environment_id, $build_type = Build_Type::FULL ): void {
 		$this->insert_history(
 			array(
 				'environment_id' => $environment_id,
+				'build_type'     => $build_type,
 				'status'         => self::RUNNING,
 				'start_time'     => time(),
 				'end_time'       => null,

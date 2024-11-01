@@ -43,6 +43,10 @@ export default function DeploymentsIndex() {
           headerName: 'Environment',
         },
         {
+          field: 'build_type',
+          headerName: 'Build type',
+        },
+        {
           field: 'status',
           headerName: 'Status',
           render: (status: number) => Status[status as keyof typeof Status],

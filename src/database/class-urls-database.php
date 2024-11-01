@@ -10,6 +10,8 @@ namespace StaticSnap\Database;
 use StaticSnap\Config\Plugin;
 use StaticSnap\Deployment\Assets;
 use StaticSnap\Deployment\URL;
+use WP;
+
 /**
  * URLS Database class
  */
@@ -100,11 +102,13 @@ final class URLS_Database extends Table {
 					`status` = VALUES(status),
 					`updated_at` = CURRENT_TIMESTAMP,
 					`last_modified` = VALUES(last_modified),
-					`processed` = `processed`,
+					`processed` = 0,
+					`indexed` = 0,
+					`deployed` = 0,
 					`retries` = 0,
 					`priority` = LEAST(priority, VALUES(priority)),
 					`source` = `source`,
-					`processed_status` = `processed_status`',
+					`processed_status` = 0',
 				\array_merge( array( $wpdb->prefix . $this->table ), $values )
 			)
 		);

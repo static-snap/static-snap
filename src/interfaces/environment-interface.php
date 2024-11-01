@@ -7,6 +7,7 @@
 
 namespace StaticSnap\Interfaces;
 
+use StaticSnap\Constants\Build_Type;
 use StaticSnap\Interfaces\Environment_Type_Interface;
 
 /**
@@ -66,9 +67,11 @@ interface Environment_Interface {
 	/**
 	 * Publish
 	 *
+	 * @param string $build_type Build type.
+	 *
 	 * @return bool
 	 */
-	public function publish(): bool;
+	public function publish( $build_type = Build_Type::FULL ): bool;
 
 	/**
 	 * Init deployment tasks

@@ -7,6 +7,7 @@
 
 namespace StaticSnap\Deployment;
 
+use DateTime;
 use StaticSnapVendor\WP_Background_Process;
 
 use StaticSnap\Database\Environments_Database;
@@ -62,6 +63,13 @@ final class Deployment_Process extends WP_Background_Process implements Deployme
 	 * @var Environment_Interface
 	 */
 	private $current_environment = null;
+
+	/**
+	 * Last build date. Store it to avoid multiple queries.
+	 *
+	 * @var DateTime
+	 */
+	private $last_build_date = null;
 
 	/**
 	 * Options instance.
@@ -178,6 +186,7 @@ final class Deployment_Process extends WP_Background_Process implements Deployme
 		$last_history                       = $this->history->get_last_history();
 		$last_history['status_information'] = array(
 			'current_task'             => get_class( $task ),
+			'build_type'               => $this->build_type,
 			'current_task_description' => $task->get_description(),
 			'percentage'               => $percentage,
 		);
@@ -261,6 +270,10 @@ final class Deployment_Process extends WP_Background_Process implements Deployme
 		if ( ! $this->current_environment ) {
 			throw new \Exception( 'Invalid Environment' );
 		}
+
+		// set build type.
+		$this->build_type = $last_history['build_type'] ?? Build_Type::FULL;
+
 		return $this->current_environment;
 	}
 
@@ -285,7 +298,7 @@ final class Deployment_Process extends WP_Background_Process implements Deployme
 		if ( ! $task ) {
 			return false;
 		}
-		$this->history->start_history( $environment->get_id() );
+		$this->history->start_history( $environment->get_id(), $build_type );
 		$this->push_to_queue( $task )->save()->dispatch();
 
 		return true;
@@ -312,7 +325,7 @@ final class Deployment_Process extends WP_Background_Process implements Deployme
 
 		$all_tasks = $this->task_manager->get_tasks();
 
-		$this->history->start_history( $environment->get_id() );
+		$this->history->start_history( $environment->get_id(), $build_type );
 
 		set_site_transient( $this->identifier . '_cli_process_lock', true );
 		// start error handler .
@@ -411,5 +424,22 @@ final class Deployment_Process extends WP_Background_Process implements Deployme
 	 */
 	public function get_build_type(): string {
 		return $this->build_type;
+	}
+
+	/**
+	 * Get last build date
+	 *
+	 * @return DateTime
+	 */
+	public function get_last_build_date(): DateTime {
+		if ( $this->last_build_date ) {
+			return $this->last_build_date;
+		}
+		$environment            = $this->get_environment();
+		$last_completed_history = $this->history->get_last_completed_history_by_environment( $environment->get_id() );
+		$end_timestamp          = $last_completed_history['end_time'];
+		$this->last_build_date  = new DateTime( '@' . $end_timestamp );
+
+		return $this->last_build_date;
 	}
 }

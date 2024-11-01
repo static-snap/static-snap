@@ -10,6 +10,8 @@ namespace StaticSnap\Cli;
 use StaticSnap\Deployment\Deployment_Process;
 use StaticSnap\Application;
 use StaticSnap\Constants\Actions;
+use StaticSnap\Constants\Build_Type;
+use WP;
 use WP_CLI;
 
 use function Clue\StreamFilter\register;
@@ -61,9 +63,10 @@ final class Cli_Commands {
 	 * Deploy
 	 *
 	 * @param array $args Args.
+	 * @param array $assoc_args Assoc args.
 	 * @return void
 	 */
-	public function deploy( array $args ): void {
+	public function deploy( array $args, array $assoc_args = array() ): void {
 		// get id from args.
 		$name = (string) $args[0];
 		$e    = \StaticSnap\Database\Environments_Database::instance()->get_by_name( $name );
@@ -71,7 +74,15 @@ final class Cli_Commands {
 			WP_CLI::error( 'Environment not found' );
 			return;
 		}
-		$this->deployment->run_cli( $e );
+		// Check for the --incremental flag.
+		$incremental = \WP_CLI\Utils\get_flag_value( $assoc_args, 'incremental', false );
+
+		$build_type = $incremental ? Build_Type::INCREMENTAL : Build_Type::FULL;
+		if ( Build_Type::INCREMENTAL === $build_type ) {
+			WP_CLI::log( __( 'Running incremental build', 'static-snap' ) );
+		}
+
+		$this->deployment->run_cli( $e, $build_type );
 	}
 
 	/**
