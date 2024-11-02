@@ -51,7 +51,6 @@ final class Prepare_Task extends Task {
 		}
 
 		$filesystem = new Filesystem();
-
 		if ( is_dir( $path ) ) {
 			// empty the directory using wp_filesystem.
 			$filesystem->delete( $path, true );

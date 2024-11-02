@@ -73,6 +73,7 @@ final class Fetch_Posts_Task extends Task {
 
 				$urls_database->set_processed( $url->id, URLS_Database::PROCESSED_STATUS_FAILED );
 			}
+
 			$urls = $urls_database->get_all( 'posts', 'all', $limit );
 
 		}
