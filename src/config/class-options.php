@@ -32,8 +32,8 @@ final class Options {
 	 */
 	private function __construct() {
 
-		// get all options in the database Plugin::SLUG.
-		$db_options = get_option( Plugin::SLUG );
+		// get all options in the database Plugin::BASE_NAME.
+		$db_options = get_option( Plugin::BASE_NAME );
 
 		$options = apply_filters( 'static_snap_get_options', $db_options );
 		if ( ! is_array( $options ) ) {
