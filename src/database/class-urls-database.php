@@ -65,8 +65,9 @@ final class URLS_Database extends Table {
 	 * Insert many URLs.
 	 *
 	 * @param array $urls The array of URLs to insert.
+	 * @param bool  $force_process Whether to force the process or not. Warning: This will reset the processed status and can make infinite loops.
 	 */
-	public function insert_many( array $urls ) {
+	public function insert_many( array $urls, $force_process = false ) {
 		if ( empty( $urls ) ) {
 			return;
 		}
@@ -95,6 +96,7 @@ final class URLS_Database extends Table {
 		$wpdb->query(
 			// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- Reason: we're passing an array instead.
 			$wpdb->prepare(
+				///* phpcs:disable WordPress.DB.PreparedSQL.NotPrepared -- Reason: we are controlling the values and there is no user input.
 				'INSERT IGNORE INTO %i
 		(`type`,`type_reference_id`,`url`, `url_hash`,`local_path`,`last_modified` , `status`, `priority`,`source`, `processed_status`)
 		VALUES ' . \implode( ', ', \array_fill( 0, \count( $urls ), '(%s,%s,%s, %s, %s, %s,%s, %d, %s, %d )' ) )
@@ -102,13 +104,13 @@ final class URLS_Database extends Table {
 					`status` = VALUES(status),
 					`updated_at` = CURRENT_TIMESTAMP,
 					`last_modified` = VALUES(last_modified),
-					`processed` = 0,
-					`indexed` = 0,
-					`deployed` = 0,
-					`retries` = 0,
-					`priority` = LEAST(priority, VALUES(priority)),
-					`source` = `source`,
-					`processed_status` = 0',
+					`processed` = ' . ( $force_process ? 0 : '`processed`' ) . ',
+					`indexed`          = 0,
+					`deployed`         = 0,
+					`retries`          = 0,
+					`priority`         = LEAST( priority, VALUES( priority ) ),
+					`source`           = `source`,
+					`processed_status` = ' . ( $force_process ? 0 : '`processed_status`' ),
 				\array_merge( array( $wpdb->prefix . $this->table ), $values )
 			)
 		);
@@ -130,13 +132,13 @@ final class URLS_Database extends Table {
 		if ( ! $wpdb ) {
 			return array();
 		}
-		$default_where = '`processed` = 0';
+		$default_where = '`processed`  = 0';
 
 		$extra_where = call_user_func( array( $this, 'get_' . $type . '_where' ), $default_where );
 		$find_type   = call_user_func( array( $this, 'get_' . $find_type . '_find_type' ) );
 
 		$query = sprintf(
-			'SELECT %s FROM `%s` WHERE  %s ORDER BY `priority` ASC, `created_at` ASC, `id` ASC LIMIT %d OFFSET %d',
+			'SELECT % s FROM `%s` WHERE % s ORDER BY `priority` ASC, `created_at` ASC, `id` ASC LIMIT % d OFFSET % d',
 			$find_type,
 			$wpdb->prefix . $this->table,
 			$extra_where,
@@ -154,7 +156,7 @@ final class URLS_Database extends Table {
 	 * @return string
 	 */
 	private function get_all_find_type(): string {
-		return '*';
+		return ' * ';
 	}
 	/**
 	 * Get count find type
@@ -162,7 +164,7 @@ final class URLS_Database extends Table {
 	 * @return string
 	 */
 	private function get_count_find_type(): string {
-		return 'COUNT(*) as count';
+		return 'COUNT( * ) as count';
 	}
 
 	/**
@@ -184,7 +186,7 @@ final class URLS_Database extends Table {
 	 * @return string
 	 */
 	private function get_deployed_where( string $default_where ): string {
-		return '`deployed` = 0';
+		return '`deployed`             = 0';
 	}
 	/**
 	 * Get indexed where
@@ -194,7 +196,7 @@ final class URLS_Database extends Table {
 	 * @return string
 	 */
 	private function get_indexed_where( string $default_where ): string {
-		return '`indexed` = 0 AND `local_path_destination` LIKE "%.html"';
+		return '`indexed`              = 0 and `local_path_destination` LIKE "%.html"';
 	}
 
 
