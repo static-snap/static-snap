@@ -105,6 +105,13 @@ abstract class Filters {
 	const IGNORED_EXTENSIONS = Plugin::BASE_NAME . '_ignored_extensions';
 
 	/**
+	 * Ignore current asset filter
+	 * This filter is used to define the ignore current asset used in the plugin.
+	 * For example you can ignore the current asset if it is not needed in the deployment process when we are using a quick deployment
+	 */
+	const IGNORE_CURRENT_ASSET = Plugin::BASE_NAME . '_ignore_current_asset';
+
+	/**
 	 * Possible extensions with urls filter
 	 * This filter is used to define the possible extensions with urls used in the plugin
 	 */

@@ -109,6 +109,11 @@ final class Assets {
 			$directory_iterator,
 			function ( $current ) use ( $source, $ignored_files, $ignored_extensions, $patterns ) {
 
+				$ignore_current = apply_filters( Filters::IGNORE_CURRENT_ASSET, false, $current );
+				if ( $ignore_current ) {
+					return false;
+				}
+
 				$current_path = $current->getRealPath();
 
 				$relative_path = substr( $current->getRealPath(), strlen( rtrim( $source, DIRECTORY_SEPARATOR ) ) );

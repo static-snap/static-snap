@@ -72,6 +72,19 @@ final class Get_Assets_Task extends Task {
 		$wordpress_root_directory = ABSPATH;
 		$bulk_insert              = 10;
 		$count                    = 0;
+		$this->deployment_process->get_environment();
+
+		$build_type = $this->deployment_process->get_build_type();
+
+		if ( 'incremental' === $build_type ) {
+			$last_build_time = $this->deployment_process->get_last_build_date()->getTimestamp();
+			add_filter( Filters::IGNORE_CURRENT_ASSET, function ( $ignore_current, $current ) use ( $last_build_time ) {
+				$last_modified_time = $current->getMTime();
+				return $last_modified_time < $last_build_time;
+
+			}, 10, 2 );
+		}
+
 
 		$iterator      = Assets::get_assets( $wordpress_root_directory );
 		$urls          = array();
