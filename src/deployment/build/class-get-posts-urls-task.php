@@ -42,7 +42,9 @@ final class Get_Posts_Urls_Task extends Task {
 
 		$build_type = $this->deployment_process->get_build_type();
 		$extra_args = array();
+		$reset_process_field = false;
 		if ( Build_Type::INCREMENTAL === $build_type ) {
+			$reset_process_field = true;
 			$last_build_datetime = $this->deployment_process->get_last_build_date()->format( 'Y-m-d H:i:s' );
 			$extra_args['date_query'] = array(
 				'column' => 'post_modified_gmt',
@@ -98,7 +100,7 @@ final class Get_Posts_Urls_Task extends Task {
 
 		$urls_database = URLS_Database::instance();
 		$urls          = apply_filters( Filters::BEFORE_SAVE_POST_URLS, $urls );
-		$urls_database->insert_many( $urls );
+		$urls_database->insert_many( $urls , $reset_process_field );
 
 		return true;
 	}
