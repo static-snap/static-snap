@@ -48,6 +48,9 @@ abstract class Table {
 	 */
 	public function get_table_name() {
 		global $wpdb;
+		if ( ! $wpdb ) {
+			return null;
+		}
 		return $wpdb->prefix . $this->table;
 	}
 
@@ -59,6 +62,9 @@ abstract class Table {
 	protected function init_table() {
 
 		global $wpdb;
+		if ( ! $wpdb ) {
+			return;
+		}
 		$table_name      = $wpdb->prefix . $this->table;
 		$charset_collate = $wpdb->get_charset_collate();
 		$sql             = sprintf( $this->table_definition, $table_name, $charset_collate );
@@ -73,9 +79,12 @@ abstract class Table {
 	 */
 	public function drop_table() {
 		global $wpdb;
+		if ( ! $wpdb ) {
+			return;
+		}
 		$table_name = $this->get_table_name();
-		// phpcs:ignore
-		$wpdb->query( "DROP TABLE IF EXISTS $table_name" );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$wpdb->query( $wpdb->prepare( 'DROP TABLE IF EXISTS %i', $table_name ) );
 	}
 
 	/**
@@ -83,8 +92,11 @@ abstract class Table {
 	 */
 	public function truncate() {
 		global $wpdb;
-		// phpcs:ignore
-		$wpdb->query( 'TRUNCATE TABLE ' . $wpdb->prefix . $this->table );
+		if ( ! $wpdb ) {
+			return;
+		}
+
+		$wpdb->query( $wpdb->prepare( 'TRUNCATE TABLE %i', $wpdb->prefix . $this->table ) );
 	}
 
 
@@ -97,12 +109,14 @@ abstract class Table {
 	 */
 	public function get_by_id( int $id ) {
 		global $wpdb;
+		if ( ! $wpdb ) {
+			return null;
+		}
 
 		$table_name = $this->get_table_name();
-		// phpcs:ignore
-		$query = $wpdb->prepare( "SELECT * FROM $table_name WHERE id = %d", $id );
-		// phpcs:ignore
-		$row   = $wpdb->get_row( $query, ARRAY_A );
+
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$row = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM %i WHERE id = %d', $table_name, $id ), ARRAY_A );
 		if ( ! $row ) {
 			return null;
 		}
@@ -118,12 +132,14 @@ abstract class Table {
 	 */
 	public function delete_by_id( $id ) {
 		global $wpdb;
+		if ( ! $wpdb ) {
+			return null;
+		}
 
 		$table_name = $this->get_table_name();
-		// phpcs:ignore
-		$query = $wpdb->prepare( "DELETE FROM $table_name WHERE id = %d", $id );
-	    // phpcs:ignore
-		return $wpdb->query( $query );
+
+	    // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		return $wpdb->query( $wpdb->prepare( 'DELETE FROM %i WHERE id = %d', $table_name, $id ) );
 	}
 
 	/**
@@ -135,12 +151,13 @@ abstract class Table {
 	 */
 	public function delete_by( $key, $id ) {
 		global $wpdb;
+		if ( ! $wpdb ) {
+			return null;
+		}
 
 		$table_name = $this->get_table_name();
-		// phpcs:ignore
-		$query = $wpdb->prepare( "DELETE FROM $table_name WHERE $key = %d", $id );
-	    // phpcs:ignore
-		return $wpdb->query( $query );
+	    // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		return $wpdb->query( $wpdb->prepare( 'DELETE FROM %i WHERE %i = %d', $table_name, $key, $id ) );
 	}
 
 	/**
@@ -148,19 +165,19 @@ abstract class Table {
 	 */
 	public function reset_auto_increment() {
 		global $wpdb;
+		if ( ! $wpdb ) {
+			return;
+		}
 		$table_name = $this->get_table_name();
-
-		// phpcs:ignore
-		$max_id = $wpdb->get_var( "SELECT MAX(id) FROM $table_name" );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$max_id = $wpdb->get_var( $wpdb->prepare( 'SELECT MAX(id) FROM %i', $table_name ) );
 
 		if ( null !== $max_id ) {
-			// phpcs:ignore
-			$query = $wpdb->prepare( "ALTER TABLE $table_name AUTO_INCREMENT = %d", $max_id + 1 );
-			// phpcs:ignore
-			$wpdb->query( $query );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$wpdb->query( $wpdb->prepare( 'ALTER TABLE %i AUTO_INCREMENT = %d', $table_name, $max_id + 1 ) );
 		} else {
-			// phpcs:ignore
-			$wpdb->query( "ALTER TABLE $table_name AUTO_INCREMENT = 1" );
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$wpdb->query( $wpdb->prepare( 'ALTER TABLE %i AUTO_INCREMENT = 1', $table_name ) );
 		}
 	}
 
@@ -171,9 +188,12 @@ abstract class Table {
 	 */
 	public function delete_all() {
 		global $wpdb;
+		if ( ! $wpdb ) {
+			return null;
+		}
 		$table_name = $this->get_table_name();
-		// phpcs:ignore
-		return $wpdb->query( "DELETE FROM $table_name" );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		return $wpdb->query( $wpdb->prepare( 'DELETE FROM %i', $table_name ) );
 	}
 
 	/**
@@ -188,6 +208,9 @@ abstract class Table {
 			array_map(
 				function ( $value ) {
 					global $wpdb;
+					if ( ! $wpdb ) {
+						return $value;
+					}
 
 					// Use the official prepare() function to sanitize the value.
 					return $wpdb->prepare( '%s', $value );

@@ -311,6 +311,12 @@ class URL implements Deployment_URL_Interface {
 		add_filter( Filters::POST_URL_CONTENT, array( __CLASS__, 'default_content_filter' ), 10, 3 );
 	}
 	/**
+	 * Remove default filter
+	 */
+	public static function remove_default_filter() {
+		remove_filter( Filters::POST_URL_CONTENT, array( __CLASS__, 'default_content_filter' ), 10 );
+	}
+	/**
 	 * Get remote url
 	 *
 	 * @param string      $destination Destination.

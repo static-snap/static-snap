@@ -49,12 +49,13 @@ final class Environments_Database extends Table {
 	 */
 	public function get_all() {
 		global $wpdb;
+		if ( ! $wpdb ) {
+			return array();
+		}
 
 		$table_name = $this->get_table_name();
-
-		$query = "SELECT * FROM $table_name";
 		// phpcs:ignore
-		return $wpdb->get_results( $query, ARRAY_A );
+		return $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM %i', $table_name ), ARRAY_A );
 	}
 
 	/**
@@ -78,11 +79,13 @@ final class Environments_Database extends Table {
 	 */
 	public function get_by_name( string $name ) {
 		global $wpdb;
+		if ( ! $wpdb ) {
+			return null;
+		}
 
 		$table_name = $this->get_table_name();
 
-		// phpcs:ignore
-		$query = $wpdb->prepare( "SELECT * FROM $table_name WHERE name = %s", $name );
+		$query = $wpdb->prepare( 'SELECT * FROM %i WHERE name = %s', $table_name, $name );
 		// phpcs:ignore
 		$row   = $wpdb->get_row( $query, ARRAY_A );
 		if ( ! $row ) {
@@ -112,6 +115,9 @@ final class Environments_Database extends Table {
 			);
 		}
 		global $wpdb;
+		if ( ! $wpdb ) {
+			return null;
+		}
 
 		$table_name = $this->get_table_name();
 		// phpcs:ignore
@@ -129,6 +135,9 @@ final class Environments_Database extends Table {
 	 */
 	public function update( $id, Environment $environment ) {
 		global $wpdb;
+		if ( ! $wpdb ) {
+			return null;
+		}
 		$table_name = $this->get_table_name();
 
 		// check if the environment name exists.

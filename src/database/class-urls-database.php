@@ -76,22 +76,22 @@ final class URLS_Database extends Table {
 		$values = array();
 		$this->start_fix_null_values_filter();
 		foreach ( $urls as $url ) {
-				$values[] = $url->get_type();
-				$values[] = $url->get_type_reference_id() ? $url->get_type_reference_id() : 'NULL';
-				$values[] = $url->get_url();
-				$values[] = $url->get_url_hash();
-				$values[] = $url->get_local_path() ? $url->get_local_path() : 'NULL';
-				$values[] = $url->get_last_modified();
-				$values[] = $url->get_status();
-				$values[] = $url->get_priority();
-				$values[] = $url->get_source();
-				$values[] = 0;
+			$values[] = $url->get_type();
+			$values[] = $url->get_type_reference_id() ? $url->get_type_reference_id() : 'NULL';
+			$values[] = $url->get_url();
+			$values[] = $url->get_url_hash();
+			$values[] = $url->get_local_path() ? $url->get_local_path() : 'NULL';
+			$values[] = $url->get_last_modified();
+			$values[] = $url->get_status();
+			$values[] = $url->get_priority();
+			$values[] = $url->get_source();
+			$values[] = 0;
 		}
 
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.NoCaching -- Reason: No relevant caches.
 		// phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery -- Reason: Most performant way.
 		$wpdb->query(
-			// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- Reason: we're passing an array instead.
+		// phpcs:disable WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- Reason: we're passing an array instead.
 			$wpdb->prepare(
 				'INSERT IGNORE INTO %i
 		(`type`,`type_reference_id`,`url`, `url_hash`,`local_path`,`last_modified` , `status`, `priority`,`source`, `processed_status`)
@@ -115,148 +115,194 @@ final class URLS_Database extends Table {
 	/**
 	 * Get URLs
 	 *
-	 * @param string $type The type of URLs to get. Available types are 'all' | 'assets' | 'posts'.
-	 * @param string $find_type The finder type count or all.
+	 * @param string $type The type of URLs to get. Available types are 'all' | 'assets' | 'posts' | 'content_assets' | 'deployed' | 'indexed'.
 	 * @param int    $limit The number of URLs to get.
 	 * @param int    $offset The offset to start from.
 	 * @return array
 	 */
-	public function get_all( string $type = 'all', string $find_type = 'all', int $limit = 50, int $offset = 0 ): array {
+	public function get_all( string $type = 'all', int $limit = 50, int $offset = 0 ): array {
 		global $wpdb;
 		if ( ! $wpdb ) {
 			return array();
 		}
-		$default_where = '`processed` = 0';
+		$method = 'get_' . $type . '_results';
+		// check if function exists.
+		if ( ! method_exists( $this, $method ) ) {
+			return array();
+		}
 
-		$extra_where = call_user_func( array( $this, 'get_' . $type . '_where' ), $default_where );
-		$find_type   = call_user_func( array( $this, 'get_' . $find_type . '_find_type' ) );
+		return call_user_func( array( $this, $method ), $limit, $offset );
+	}
 
-		$query = sprintf(
-			'SELECT %s FROM `%s` WHERE  %s ORDER BY `priority` ASC, `created_at` ASC, `id` ASC LIMIT %d OFFSET %d',
-			$find_type,
-			$wpdb->prefix . $this->table,
-			$extra_where,
-			$limit,
-			$offset
+	/**
+	 * Default get all
+	 *
+	 * @param int $limit The number of URLs to get.
+	 * @param int $offset The offset to start from.
+	 * @return array
+	 */
+	public function get_all_results( $limit, $offset ) {
+		global $wpdb;
+		if ( ! $wpdb ) {
+			return array();
+		}
+
+		return $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT * FROM %i WHERE `processed` = 0 ORDER BY `priority` ASC, `created_at` ASC, `id` ASC LIMIT %d OFFSET %d',
+				$wpdb->prefix . $this->table,
+				$limit,
+				$offset
+			),
+			OBJECT
 		);
-
-		// phpcs:ignore WordPress.DB
-		return $wpdb->get_results( $query, OBJECT );
 	}
 
 	/**
-	 * Get all find type
+	 * Get Deployed results
 	 *
-	 * @return string
+	 * @param int $limit The number of URLs to get.
+	 * @param int $offset The offset to start from.
+	 * @return array
 	 */
-	private function get_all_find_type(): string {
-		return '*';
-	}
-	/**
-	 * Get count find type
-	 *
-	 * @return string
-	 */
-	private function get_count_find_type(): string {
-		return 'COUNT(*) as count';
-	}
+	public function get_deployed_results( $limit, $offset ) {
+		global $wpdb;
+		if ( ! $wpdb ) {
+			return array();
+		}
 
-	/**
-	 * Get all where
-	 *
-	 * @param string $default_where The default where clause.
-	 *
-	 * @return string
-	 */
-	private function get_all_where( string $default_where ): string {
-		return $default_where;
-	}
-
-	/**
-	 * Get all where
-	 *
-	 * @param string $default_where The default where clause.
-	 *
-	 * @return string
-	 */
-	private function get_deployed_where( string $default_where ): string {
-		return '`deployed` = 0';
-	}
-	/**
-	 * Get indexed where
-	 *
-	 * @param string $default_where The default where clause.
-	 *
-	 * @return string
-	 */
-	private function get_indexed_where( string $default_where ): string {
-		return '`indexed` = 0 AND `local_path_destination` LIKE "%.html"';
+		return $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT * FROM %i WHERE `deployed` = 0 ORDER BY `priority` ASC, `created_at` ASC, `id` ASC LIMIT %d OFFSET %d',
+				$wpdb->prefix . $this->table,
+				$limit,
+				$offset
+			),
+			OBJECT
+		);
 	}
 
 
 	/**
-	 * Get assets where regexp
+	 * Get Indexed results
+	 *
+	 * @param int $limit The number of URLs to get.
+	 * @param int $offset The offset to start from.
+	 * @return array
+	 */
+	public function get_indexed_results( $limit, $offset ) {
+		global $wpdb;
+		if ( ! $wpdb ) {
+			return array();
+		}
+
+		return $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT * FROM %i WHERE `indexed` = 0 AND `local_path_destination` LIKE %s ORDER BY `priority` ASC, `created_at` ASC, `id` ASC LIMIT %d OFFSET %d',
+				$wpdb->prefix . $this->table,
+				'%.html',
+				$limit,
+				$offset
+			),
+			OBJECT
+		);
+	}
+
+	/**
+	 * Get Assets results
+	 *
+	 * @param int $limit The number of URLs to get.
+	 * @param int $offset The offset to start from.
+	 * @return array
+	 */
+	public function get_assets_results( $limit, $offset ) {
+		global $wpdb;
+		if ( ! $wpdb ) {
+			return array();
+		}
+
+		return $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT * FROM %i WHERE `processed` = 0 AND `local_path` IS NOT NULL ORDER BY `priority` ASC, `created_at` ASC, `id` ASC LIMIT %d OFFSET %d',
+				$wpdb->prefix . $this->table,
+				$limit,
+				$offset
+			),
+			OBJECT
+		);
+	}
+
+
+	/**
+	 * Get Content Assets results extensions string for query
 	 *
 	 * @return string
 	 */
-	private function get_content_assets_regexp(): string {
+	private function get_content_assets_results_extensions_string_for_query(): string {
 		$extensions = Assets::get_content_assets_extensions();
 
 		$extensions = implode(
-			' | ',
+			'|',
 			array_map(
 				function ( $ext ) {
-					return sprintf( ' % s', $ext );
+					return sprintf( '%s', $ext );
 				},
 				$extensions
 			)
 		);
-		return '`url` REGEXP \'\\.(%s)$\'';
+		return $extensions;
 	}
+
 	/**
-	 * Get all assets where
+	 * Get Content Assets results
 	 *
-	 * @param string $default_where The default where clause.
-	 *
-	 * @return string
+	 * @param int $limit The number of URLs to get.
+	 * @param int $offset The offset to start from.
+	 * @return array
 	 */
-	private function get_assets_where( string $default_where ): string {
-		$regexp = $this->get_content_assets_regexp();
-		return sprintf(
-			'%s AND `local_path` IS NOT NULL',
-			$default_where,
-			$regexp
+	public function get_content_assets_results( $limit, $offset ) {
+		global $wpdb;
+		if ( ! $wpdb ) {
+			return array();
+		}
+		$extensions = $this->get_content_assets_results_extensions_string_for_query();
+
+		return $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT * FROM %i WHERE `processed` = 0 AND `local_path` IS NOT NULL AND `url` REGEXP %s ORDER BY `priority` ASC, `created_at` ASC, `id` ASC LIMIT %d OFFSET %d',
+				$wpdb->prefix . $this->table,
+				"\\.($extensions)$",
+				$limit,
+				$offset
+			),
+			OBJECT
 		);
 	}
 
+
 	/**
-	 * Get all content assets where
+	 * Get Post results
 	 *
-	 * @param string $default_where The default where clause.
-	 *
-	 * @return string
+	 * @param int $limit The number of URLs to get.
+	 * @param int $offset The offset to start from.
+	 * @return array
 	 */
-	private function get_content_assets_where( string $default_where ): string {
-		$regexp = $this->get_content_assets_regexp();
-		return sprintf(
-			'%s AND `local_path` IS NOT NULL AND %s',
-			$default_where,
-			$regexp
+	public function get_posts_results( $limit, $offset ) {
+		global $wpdb;
+		if ( ! $wpdb ) {
+			return array();
+		}
+
+		return $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT * FROM %i WHERE `processed` = 0 AND `local_path` IS NULL ORDER BY `priority` ASC, `created_at` ASC, `id` ASC LIMIT %d OFFSET %d',
+				$wpdb->prefix . $this->table,
+				$limit,
+				$offset
+			),
+			OBJECT
 		);
 	}
-
-	/**
-	 * Get all posts where
-	 *
-	 * @param string $default_where The default where clause.
-	 *
-	 * @return string
-	 */
-	private function get_posts_where( string $default_where ): string {
-		return sprintf( '%s AND `local_path` IS NULL', $default_where );
-	}
-
-
 
 	/**
 	 * Set processed
@@ -271,7 +317,7 @@ final class URLS_Database extends Table {
 		if ( ! $wpdb ) {
 			return;
 		}
-		$destination_query = $local_path_destination ? ', `local_path_destination` = "%s"' : '';
+		$destination_query = $local_path_destination ? ', `local_path_destination` = " % s"' : '';
 		$query             = 'UPDATE %i SET `processed` = 1, `processed_status` = %d ' . $destination_query . ' WHERE `id` = %d';
 		// phpcs:ignore WordPress.DB
 		$prepared_query = $local_path_destination ? $wpdb->prepare( $query, $wpdb->prefix . $this->table, $status, $local_path_destination, $id ) : $wpdb->prepare( $query, $wpdb->prefix . $this->table, $status, $id );
@@ -279,11 +325,11 @@ final class URLS_Database extends Table {
 		$wpdb->query( $prepared_query );
 	}
 
-	/**
-	 * Set deployed
-	 *
-	 * @param int $id The id of the URL to set as deployed.
-	 */
+		/**
+		 * Set deployed
+		 *
+		 * @param int $id The id of the URL to set as deployed.
+		 */
 	public function set_deployed( int $id ) {
 		global $wpdb;
 		if ( ! $wpdb ) {
@@ -295,11 +341,11 @@ final class URLS_Database extends Table {
 		);
 	}
 
-	/**
-	 * Set indexed
-	 *
-	 * @param int $id The id of the URL to set as indexed.
-	 */
+		/**
+		 * Set indexed
+		 *
+		 * @param int $id The id of the URL to set as indexed.
+		 */
 	public function set_indexed( int $id ) {
 		global $wpdb;
 		if ( ! $wpdb ) {
@@ -309,12 +355,12 @@ final class URLS_Database extends Table {
 		$wpdb->query( $wpdb->prepare( 'UPDATE %i SET `indexed` = 1 WHERE `id` = %d', $wpdb->prefix . $this->table, $id ) );
 	}
 
-	/**
-	 * Increase retries
-	 *
-	 * @param int $id The id of the URL to increase the retries.
-	 * @return void
-	 */
+		/**
+		 * Increase retries
+		 *
+		 * @param int $id The id of the URL to increase the retries.
+		 * @return void
+		 */
 	public function increase_retries( int $id ) {
 		global $wpdb;
 		if ( ! $wpdb ) {

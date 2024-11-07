@@ -41,7 +41,7 @@ final class Fetch_Posts_Task extends Task {
 		$limit = 20;
 
 		// get current offset.
-		$urls = $urls_database->get_all( 'posts', 'all', $limit );
+		$urls = $urls_database->get_all( 'posts', $limit );
 
 		$environment = $this->deployment_process->get_environment();
 
@@ -73,7 +73,7 @@ final class Fetch_Posts_Task extends Task {
 				$urls_database->set_processed( $url->id, URLS_Database::PROCESSED_STATUS_FAILED );
 			}
 
-			$urls = $urls_database->get_all( 'posts', 'all', $limit );
+			$urls = $urls_database->get_all( 'posts', $limit );
 
 		}
 

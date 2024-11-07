@@ -37,10 +37,10 @@ final class Copy_Assets_Task extends Task {
 		$database = URLS_Database::instance();
 		// get current offset.
 		$limit = 20;
-		$urls  = $database->get_all( 'assets', 'all', $limit );
+		$urls  = $database->get_all( 'assets', $limit );
 
 		$environment = $this->deployment_process->get_environment();
-		URL::add_default_filter();
+		URL::remove_default_filter();
 
 		while ( $urls ) {
 
@@ -49,7 +49,7 @@ final class Copy_Assets_Task extends Task {
 				// create a file from $url local_path.
 				$database->increase_retries( $url->id );
 				$file   = new \SplFileInfo( $url->local_path );
-				$result = Assets::copy( $file, $url, $environment );
+				$result = Assets::copy( $file, $url, $environment, true );
 				if ( $result['saved'] ) {
 					$database->set_processed( $url->id, URLS_Database::PROCESSED_STATUS_SUCCESS, $result['local_path_destination'] );
 					continue;
@@ -58,7 +58,7 @@ final class Copy_Assets_Task extends Task {
 				$database->set_processed( $url->id, URLS_Database::PROCESSED_STATUS_FAILED );
 			}
 
-			$urls = $database->get_all( 'assets', 'all', $limit );
+			$urls = $database->get_all( 'assets', $limit );
 		}
 
 		return true;

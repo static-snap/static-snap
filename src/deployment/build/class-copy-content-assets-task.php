@@ -47,7 +47,8 @@ final class Copy_Content_Assets_Task extends Task {
 				$urls_database->increase_retries( $url->id );
 
 				$file     = new \SplFileInfo( $url->local_path );
-				$finished = Assets::copy( $file, $url->url, $environment );
+
+				$finished = Assets::copy( $file, $url, $environment );
 				if ( $finished ) {
 					$urls_database->set_processed( $url->id, URLS_Database::PROCESSED_STATUS_SUCCESS );
 					continue;

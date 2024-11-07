@@ -139,11 +139,12 @@ final class Assets {
 	 * @param \SplFileInfo $file Iterator.
 	 * @param object       $url Destination.
 	 * @param Environment  $environment Environment.
+	 * @param bool         $is_binary Is binary.
 	 *
 	 * @return array
 	 * @throws \Exception If directory could not be created.
 	 */
-	public static function copy( \SplFileInfo $file, object $url, Environment $environment ): array {
+	public static function copy( \SplFileInfo $file, object $url, Environment $environment, $is_binary = false ): array {
 		$destination = $environment->get_build_path();
 		if ( $file->isDir() ) {
 			// phpcs:ignore WordPress.PHP.DevelopmentFunctions
@@ -177,11 +178,15 @@ final class Assets {
 				define( 'FS_CHMOD_FILE', $chmod_dir );
 			}
 			$filesystem = new \WP_Filesystem_Direct( true );
-			$content    = $filesystem->get_contents( $file->getRealPath() );
-
-			$content = apply_filters( Filters::POST_URL_CONTENT, $content, $url, $environment );
-
-			$finished = $filesystem->put_contents( $destination, $content );
+			$finished   = false;
+			if ( $is_binary ) {
+				// no need to apply filters for binary files.
+				$finished = $filesystem->copy( $file->getRealPath(), $destination, true );
+			} else {
+				$content  = $filesystem->get_contents( $file->getRealPath() );
+				$content  = apply_filters( Filters::POST_URL_CONTENT, $content, $url, $environment );
+				$finished = $filesystem->put_contents( $destination, $content );
+			}
 
 			return array(
 				'saved'                  => false !== $finished,
