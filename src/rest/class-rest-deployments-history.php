@@ -194,7 +194,7 @@ final class Rest_Deployments_History extends WP_REST_Controller {
 		$zip_file_path = $environment->get_build_path() . '/' . $zip_file;
 
 		if ( ! file_exists( $zip_file_path ) ) {
-			return rest_ensure_response( new \WP_Error( 'not_found', 'Deployment not found', array( 'status' => 404 ) ) );
+			return rest_ensure_response( new \WP_Error( 'not_found', 'Deployment zip file not found', array( 'status' => 404 ) ) );
 		}
 
 		$zip_file_url = $environment->get_build_path() . '/' . $zip_file;
