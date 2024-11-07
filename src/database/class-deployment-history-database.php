@@ -53,35 +53,46 @@ final class Deployment_History_Database extends Table {
 
 
 	/**
-	 *  Get select
-	 *
-	 * @return string
-	 */
-	private function get_select() {
-		global $wpdb;
-		$table_name         = $this->get_table_name();
-		$environments_table = Environments_Database::instance()->get_table_name();
-		$wp_users_table     = $wpdb->prefix . 'users';
-
-		return <<<EOD
-			SELECT $table_name.*,
-					$environments_table.name as environment_name, $environments_table.type as environment_type, $environments_table.settings as environment_settings,
-					$wp_users_table.display_name as created_by_name, $wp_users_table.user_email as created_by_email
-				FROM $table_name
-				LEFT JOIN $environments_table ON $table_name.environment_id = $environments_table.id
-				LEFT JOIN $wp_users_table     ON $table_name.created_by = $wp_users_table.ID
-		EOD;
-	}
-
-	/**
 	 * Get all history
 	 */
 	public function get_all(): array {
 		global $wpdb;
-		$select     = $this->get_select();
-		$table_name = $this->get_table_name();
-		// phpcs:ignore
-		return $wpdb->get_results( "$select ORDER BY $table_name.id DESC LIMIT 50", ARRAY_A );
+		if ( ! $wpdb ) {
+			return array();
+		}
+		$table_name         = $this->get_table_name();
+		$environments_table = Environments_Database::instance()->get_table_name();
+		$wp_users_table     = $wpdb->prefix . 'users';
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		return $wpdb->get_results(
+			$wpdb->prepare(
+				'SELECT %i.*,
+						%i.name as environment_name,
+						%i.type as environment_type,
+						%i.settings as environment_settings,
+						%i.display_name as created_by_name,
+						%i.user_email as created_by_email
+					FROM %i
+						LEFT JOIN %i ON %i.environment_id = %i.id
+						LEFT JOIN %i ON %i.created_by = %i.ID
+					ORDER BY %i.id DESC LIMIT 50',
+				$table_name,
+				$environments_table,
+				$environments_table,
+				$environments_table,
+				$wp_users_table,
+				$wp_users_table,
+				$table_name,
+				$environments_table,
+				$table_name,
+				$environments_table,
+				$wp_users_table,
+				$table_name,
+				$wp_users_table,
+				$table_name
+			),
+			ARRAY_A
+		);
 	}
 
 
@@ -94,10 +105,42 @@ final class Deployment_History_Database extends Table {
 	public function get_last_history(): array {
 		// use database.
 		global $wpdb;
-		$table_name = $this->get_table_name();
-		$select     = $this->get_select();
-		// phpcs:ignore
-		$result = $wpdb->get_row( "$select ORDER BY $table_name.id DESC LIMIT 1", ARRAY_A );
+		if ( ! $wpdb ) {
+			return array();
+		}
+		$table_name         = $this->get_table_name();
+		$environments_table = Environments_Database::instance()->get_table_name();
+		$wp_users_table     = $wpdb->prefix . 'users';
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$result = $wpdb->get_row(
+			$wpdb->prepare(
+				'SELECT %i.*,
+						%i.name as environment_name,
+						%i.type as environment_type,
+						%i.settings as environment_settings,
+						%i.display_name as created_by_name,
+						%i.user_email as created_by_email
+					FROM %i
+						LEFT JOIN %i ON %i.environment_id = %i.id
+						LEFT JOIN %i ON %i.created_by = %i.ID
+					ORDER BY %i.id DESC LIMIT 1',
+				$table_name,
+				$environments_table,
+				$environments_table,
+				$environments_table,
+				$wp_users_table,
+				$wp_users_table,
+				$table_name,
+				$environments_table,
+				$table_name,
+				$environments_table,
+				$wp_users_table,
+				$table_name,
+				$wp_users_table,
+				$table_name
+			),
+			ARRAY_A
+		);
 
 		if ( ! $result ) {
 			return array();
@@ -130,13 +173,48 @@ final class Deployment_History_Database extends Table {
 	public function get_last_completed_history_by_environment( int $id ): array {
 		// use database.
 		global $wpdb;
-		$table_name = $this->get_table_name();
+		if ( ! $wpdb ) {
+			return array();
+		}
+		$table_name         = $this->get_table_name();
+		$environments_table = Environments_Database::instance()->get_table_name();
+		$wp_users_table     = $wpdb->prefix . 'users';
 
-		$select = $this->get_select();
-		// phpcs:ignore
-		$query  = $wpdb->prepare( "$select WHERE $table_name.environment_id = %d  AND $table_name.status = %d  ORDER BY $table_name.id DESC LIMIT 1", $id, self::COMPLETED );
-		// phpcs:ignore
-		$result = $wpdb->get_row( $query, ARRAY_A );
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$result = $wpdb->get_row(
+			$wpdb->prepare(
+				'SELECT %i.*,
+						%i.name as environment_name,
+						%i.type as environment_type,
+						%i.settings as environment_settings,
+						%i.display_name as created_by_name,
+						%i.user_email as created_by_email
+					FROM %i
+						LEFT JOIN %i ON %i.environment_id = %i.id
+						LEFT JOIN %i ON %i.created_by = %i.ID
+					WHERE %i.environment_id = %d  AND %i.status = %d
+					ORDER BY %i.id DESC LIMIT 1',
+				$table_name,
+				$environments_table,
+				$environments_table,
+				$environments_table,
+				$wp_users_table,
+				$wp_users_table,
+				$table_name,
+				$environments_table,
+				$table_name,
+				$environments_table,
+				$wp_users_table,
+				$table_name,
+				$wp_users_table,
+				$table_name,
+				$id,
+				$table_name,
+				self::COMPLETED,
+				$table_name
+			),
+			ARRAY_A
+		);
 
 		if ( ! $result ) {
 			return array();
@@ -170,6 +248,9 @@ final class Deployment_History_Database extends Table {
 	 */
 	public function insert_history( $history ) {
 		global $wpdb;
+		if ( ! $wpdb ) {
+			return;
+		}
 		$table_name = $wpdb->prefix . $this->table;
 		// phpcs:ignore
 		$wpdb->insert(
@@ -192,6 +273,9 @@ final class Deployment_History_Database extends Table {
 	 */
 	public function update_history( $history ) {
 		global $wpdb;
+		if ( ! $wpdb ) {
+			return;
+		}
 		$table_name = $wpdb->prefix . $this->table;
 		// phpcs:ignore
 		$wpdb->update(
