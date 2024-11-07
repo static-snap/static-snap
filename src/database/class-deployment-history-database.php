@@ -277,7 +277,7 @@ final class Deployment_History_Database extends Table {
 			return;
 		}
 		$table_name = $wpdb->prefix . $this->table;
-		// phpcs:ignore
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		$wpdb->update(
 			$table_name,
 			array(

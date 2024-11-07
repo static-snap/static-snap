@@ -54,7 +54,7 @@ final class Environments_Database extends Table {
 		}
 
 		$table_name = $this->get_table_name();
-		// phpcs:ignore
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		return $wpdb->get_results( $wpdb->prepare( 'SELECT * FROM %i', $table_name ), ARRAY_A );
 	}
 

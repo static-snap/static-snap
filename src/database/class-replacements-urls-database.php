@@ -74,7 +74,7 @@ final class Replacements_URLS_Database extends Table {
 		`replacement_url` = VALUES( `replacement_url` )
 		';
 
-		// phpcs:ignore WordPress.DB
+		// phpcs:ignore WordPress.DB -- query is prepared.
 		$wpdb->query( $query );
 	}
 

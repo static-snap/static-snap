@@ -108,7 +108,7 @@ final class Posts_Database {
 
 		// phpcs:ignore
 		$dates = $wpdb->get_results(
-			// phpcs:ignore
+			// phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber -- We are using array_merge to combine arrays.
 			$wpdb->prepare(
 				"SELECT post_type, YEAR(post_date) AS year, MONTH(post_date) AS month, count(ID) as posts FROM $wpdb->posts WHERE post_type IN (" .
 				\implode( ', ', \array_fill( 0, \count( $post_types ), '%s' ) )

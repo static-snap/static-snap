@@ -335,7 +335,7 @@ final class URLS_Database extends Table {
 		if ( ! $wpdb ) {
 			return;
 		}
-		// phpcs:ignore WordPress.DB
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		$wpdb->query(
 			$wpdb->prepare( 'UPDATE %i SET `deployed` = 1 WHERE `id` = %d', $wpdb->prefix . $this->table, $id )
 		);
@@ -351,7 +351,7 @@ final class URLS_Database extends Table {
 		if ( ! $wpdb ) {
 			return;
 		}
-		// phpcs:ignore WordPress.DB
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		$wpdb->query( $wpdb->prepare( 'UPDATE %i SET `indexed` = 1 WHERE `id` = %d', $wpdb->prefix . $this->table, $id ) );
 	}
 
@@ -366,7 +366,7 @@ final class URLS_Database extends Table {
 		if ( ! $wpdb ) {
 			return;
 		}
-		// phpcs:ignore WordPress.DB
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		$wpdb->query( $wpdb->prepare( 'UPDATE %i SET `retries` = `retries` + 1 WHERE `id` = %d', $wpdb->prefix . $this->table, $id ) );
 	}
 }
