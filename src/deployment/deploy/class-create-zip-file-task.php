@@ -53,6 +53,7 @@ final class Create_ZIP_File_Task extends Task {
 					continue;
 				}
 				$file = new \SplFileInfo( $url->local_path_destination );
+
 				if ( ! $file->isFile() ) {
 					$database->set_deployed( $url->id );
 					continue;

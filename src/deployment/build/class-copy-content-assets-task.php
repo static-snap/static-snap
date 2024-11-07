@@ -48,9 +48,9 @@ final class Copy_Content_Assets_Task extends Task {
 
 				$file     = new \SplFileInfo( $url->local_path );
 
-				$finished = Assets::copy( $file, $url, $environment );
-				if ( $finished ) {
-					$urls_database->set_processed( $url->id, URLS_Database::PROCESSED_STATUS_SUCCESS );
+				$result = Assets::copy( $file, $url, $environment );
+				if ( $result['saved'] ) {
+					$urls_database->set_processed( $url->id, URLS_Database::PROCESSED_STATUS_SUCCESS, $result['local_path_destination'] );
 					continue;
 				}
 
