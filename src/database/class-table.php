@@ -117,6 +117,7 @@ abstract class Table {
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		$row = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM %i WHERE id = %d', $table_name, $id ), ARRAY_A );
+
 		if ( ! $row ) {
 			return null;
 		}

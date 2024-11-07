@@ -317,7 +317,7 @@ final class URLS_Database extends Table {
 		if ( ! $wpdb ) {
 			return;
 		}
-		$destination_query = $local_path_destination ? ', `local_path_destination` = " % s"' : '';
+		$destination_query = $local_path_destination ? ', `local_path_destination` = "%s"' : '';
 		$query             = 'UPDATE %i SET `processed` = 1, `processed_status` = %d ' . $destination_query . ' WHERE `id` = %d';
 		// phpcs:ignore WordPress.DB
 		$prepared_query = $local_path_destination ? $wpdb->prepare( $query, $wpdb->prefix . $this->table, $status, $local_path_destination, $id ) : $wpdb->prepare( $query, $wpdb->prefix . $this->table, $status, $id );
