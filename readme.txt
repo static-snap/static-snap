@@ -8,6 +8,8 @@ Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
+Static Snap converts your WordPress site into a static website, boosting performance, security, scalability, and SEO.
+
 == Description ==
 **Static Snap** is a powerful WordPress plugin that transforms your dynamic WordPress site into a static website, enabling seamless integration and deployment across various hosting services.
 
