@@ -180,6 +180,6 @@ final class Options {
 	 */
 	public function save(): bool {
 		$options = apply_filters( Filters::SAVE_OPTIONS, $this->options );
-		return update_option( Plugin::SLUG, $options );
+		return update_option( Plugin::BASE_NAME, $options );
 	}
 }
