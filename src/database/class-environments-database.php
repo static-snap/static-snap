@@ -33,7 +33,7 @@ final class Environments_Database extends Table {
 		name VARCHAR(255) NOT NULL,
 		type VARCHAR(255) NOT NULL,
 		destination_type VARCHAR(20) NOT NULL default \'relative\',
-		destination_path TEXT NOT NULL default \'/\',
+		destination_path TEXT NOT NULL,
 		settings TEXT NULL,
 		created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 		updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
