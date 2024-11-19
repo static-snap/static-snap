@@ -40,6 +40,7 @@ module.exports = function (grunt) {
             src: [
               'static-snap.php',
               'composer.json',
+              'composer.lock',
               'readme.txt',
               'README.md',
               'LICENSE',
