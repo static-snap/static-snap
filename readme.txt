@@ -3,7 +3,7 @@ Contributors: staticsnap
 Tags: static site, static generator, performance, SEO
 Requires at least: 6.5.0
 Tested up to: 6.7.0
-Stable tag: 0.2.4
+Stable tag: 0.2.5
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -48,6 +48,17 @@ This plugin utilizes third-party services to provide certain functionalities. Be
    - **Terms of Service and Privacy Policy**: [Static Snap Terms of Service](https://staticsnap.com/terms-and-conditions) | [Static Snap Privacy Policy](https://staticsnap.com/privacy-policy)
 
 == Changelog ==
+= 0.2.5 - 2024-11-19 =
+* Fix: BLOB, TEXT, GEOMETRY or JSON can't have a default value
+
+= 0.2.4 - 2024-11-18 =
+* Fix: Save options issue resolved.
+* Tested up to: WordPress 6.7.0.
+
+= 0.2.3 - 2024-11-18 =
+* First approved WordPress version release.
+* General security fixes.
+
 = 0.1.0 - 2024-09-11 =
 * Initial release of Static Snap.
 
