@@ -1,6 +1,6 @@
 === Static Snap ===
 Contributors: staticsnap
-Tags: static site generator, performance, SEO, security, performance
+Tags: static site generator, performance, SEO, security, headless
 Requires at least: 6.5.0
 Tested up to: 6.7.0
 Stable tag: 0.2.5
