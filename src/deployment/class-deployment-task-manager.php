@@ -151,8 +151,8 @@ final class Deployment_Task_Manager {
 			'StaticSnap\Deployment\Build\Get_Post_Archives_Urls_Task',
 			'StaticSnap\Deployment\Build\Get_Terms_Urls_Task',
 			'StaticSnap\Deployment\Build\Get_Authors_Urls_Task',
-			'StaticSnap\Deployment\Build\Get_Assets_Task',
 			'StaticSnap\Deployment\Build\Fetch_Posts_Task',
+			'StaticSnap\Deployment\Build\Get_Assets_Task',
 			'StaticSnap\Deployment\Build\Copy_Content_Assets_Task',
 			'StaticSnap\Deployment\Deploy\Copy_Assets_Task',
 			// Deploy.
