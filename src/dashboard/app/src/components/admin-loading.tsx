@@ -80,7 +80,13 @@ const AdminLoading = ({ status, ...props }: AdminLoadingProps) => {
   }, []);
 
   return (
-    <Tooltip title={TooltipTitle} placement="bottom" arrow open={status.is_running}>
+    <Tooltip
+      title={TooltipTitle}
+      placement="bottom"
+      arrow
+      open={status.is_running}
+      PopperProps={{ sx: { zIndex: 9991 } }}
+    >
       <Box
         sx={{
           alignItems: 'center',
@@ -201,6 +207,7 @@ const AdminLoading = ({ status, ...props }: AdminLoadingProps) => {
               sx: { paddingBottom: 0 },
             }}
             sx={{
+              zIndex: 9991,
               maxWidth: '90%',
             }}
           >
