@@ -48,6 +48,10 @@ This plugin utilizes third-party services to provide certain functionalities. Be
    - **Terms of Service and Privacy Policy**: [Static Snap Terms of Service](https://staticsnap.com/terms-and-conditions) | [Static Snap Privacy Policy](https://staticsnap.com/privacy-policy)
 
 == Changelog ==
+= 0.2.6 - 2024-11-22 =
+* Fetch assets after fetching posts to address Elementor’s uncompiled CSS not generating during build time
+* Ensure the tooltip and menu appear above the admin menu bar when they are too close
+
 = 0.2.5 - 2024-11-19 =
 * Fix: BLOB, TEXT, GEOMETRY or JSON can't have a default value
 
