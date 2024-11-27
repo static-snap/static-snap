@@ -219,7 +219,7 @@ final class Application {
 			'is_running'      => $this->deployment->is_active(),
 			'is_done'         => $is_done,
 			'is_processing'   => $this->deployment->is_processing(),
-			'is_cancelled'    => $this->deployment->is_cancelled() || Deployment_History_Database::CANCELED === (int) $last_deployment['status'],
+			'is_cancelled'    => $this->deployment->is_cancelled() || empty( $last_deployment ) ? false : Deployment_History_Database::CANCELED === (int) $last_deployment['status'],
 		);
 	}
 
