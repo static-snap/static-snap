@@ -176,4 +176,14 @@ abstract class Form_Extension_Base extends Extension_Base {
 		$data['recaptcha_site_key'] = $this->get_recaptcha_site_key();
 		return $data;
 	}
+
+	/**
+	 * Sync forms settings
+	 * This method is used to sync form settings with the static snap server
+	 *
+	 * @return bool
+	 */
+	public function sync_forms_settings() {
+		return false;
+	}
 }

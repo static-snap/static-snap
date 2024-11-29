@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import LoadingButton from '@mui/lab/LoadingButton';
-import Alert from '@mui/material/Alert';
+import Alert, { AlertColor } from '@mui/material/Alert';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
@@ -13,10 +13,13 @@ import useOptions from '@staticsnap/dashboard/hooks/use-options';
 import ConnectInterface from '@staticsnap/dashboard/interfaces/connect.interface';
 import FormSettingInterface from '@staticsnap/dashboard/interfaces/form-settings.interface';
 import { __, sprintf } from '@wordpress/i18n';
+import apiFetch, { APIFetchOptions } from '@wordpress/api-fetch';
 import { useForm } from 'react-hook-form';
 
 import ConnectFallback from '../connect-fallback';
 import TextField from '../form/text-field';
+import Button from '@mui/material/Button';
+import Box from '@mui/material/Box';
 
 type FormSettingsProps = {
   title: string;
@@ -27,8 +30,10 @@ const FormSettings = ({ title }: FormSettingsProps) => {
   const connectOptions = useOptions<ConnectInterface>('connect');
   const [showSnakbar, setShowSnackbar] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snakbarSeverity, setSnackbarSeverity] = useState<AlertColor>('error');
 
   const [isLoading, setIsLoading] = useState(true);
+  const [syncLoading, setSyncLoading] = useState(false);
 
   const defaultValues: FormSettingInterface = {
     _google_recaptcha_secret_key: '',
@@ -41,6 +46,23 @@ const FormSettings = ({ title }: FormSettingsProps) => {
   });
 
   const isDirty = methods.formState.isDirty;
+  const enabled = methods.watch('enabled');
+
+  const onSync = useCallback(async () => {
+    setSyncLoading(true);
+    const response = await apiFetch<{
+      saved: boolean;
+      message: string;
+    }>({
+      method: 'POST',
+      path: '/static-snap/v1/extensions/forms/sync',
+    });
+
+    setSyncLoading(false);
+    setSnackbarMessage(response.message);
+    setSnackbarSeverity(response.saved ? 'success' : 'error');
+    setShowSnackbar(true);
+  }, []);
 
   const onSubmit = useCallback(
     async (_data: FormSettingInterface) => {
@@ -51,7 +73,7 @@ const FormSettings = ({ title }: FormSettingsProps) => {
       } catch (e: unknown) {
         const error = e as { message: string };
         setSnackbarMessage(error.message);
-        console.log(error);
+        setSnackbarSeverity('error');
         setShowSnackbar(true);
       }
 
@@ -94,9 +116,9 @@ const FormSettings = ({ title }: FormSettingsProps) => {
         >
           <Alert
             onClose={() => setShowSnackbar(false)}
-            severity="error"
+            severity={snakbarSeverity}
             variant="filled"
-            sx={{ width: '100%' }}
+            sx={{ color: 'white', width: '100%' }}
           >
             {snackbarMessage}
           </Alert>
@@ -108,47 +130,72 @@ const FormSettings = ({ title }: FormSettingsProps) => {
             <Stack direction="column" spacing={2}>
               {/* use Search ? */}
               <Switch name="enabled" label={__('Enable forms', 'static-snap')} />
-              {/* Recaptcha public Key */}
-              <TextField
-                name="google_recaptcha_site_key"
-                label={__('Recaptcha public Key', 'static-snap')}
-              />
+              {enabled && (
+                <>
+                  {/* Recaptcha public Key */}
+                  <TextField
+                    name="google_recaptcha_site_key"
+                    label={__('Recaptcha public Key', 'static-snap')}
+                  />
 
-              {/* Recaptcha Secret Key */}
-              <TextField
-                name="_google_recaptcha_secret_key"
-                type="password"
-                label={__('Recaptcha Secret Key', 'static-snap')}
-              />
+                  {/* Recaptcha Secret Key */}
+                  <TextField
+                    name="_google_recaptcha_secret_key"
+                    type="password"
+                    label={__('Recaptcha Secret Key', 'static-snap')}
+                  />
 
-              <Alert severity="info">
-                {__(
-                  'The Recaptcha private key will be sent to the Static Snap Server. We will use these keys to protect your forms from spam.',
-                  'static-snap'
-                )}
-              </Alert>
-              <Alert severity="info">
-                {__('You can get your Recaptcha keys from: ', 'static-snap')}
-                <a
-                  href="https://www.google.com/recaptcha/admin/create"
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  https://www.google.com/recaptcha/admin/create
-                </a>
-              </Alert>
+                  <Alert severity="info">
+                    {__(
+                      'The Recaptcha private key will be sent to the Static Snap Server. We will use these keys to protect your forms from spam.',
+                      'static-snap'
+                    )}
+                  </Alert>
+                  <Alert severity="info">
+                    {__('You can get your Recaptcha keys from: ', 'static-snap')}
+                    <a
+                      href="https://www.google.com/recaptcha/admin/create"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      https://www.google.com/recaptcha/admin/create
+                    </a>
+                  </Alert>
 
-              {/* Save */}
-              <Stack direction="row" sx={{ mt: 3 }}>
-                <LoadingButton
-                  type="submit"
-                  variant="contained"
-                  loading={isLoading}
-                  disabled={!isDirty}
-                >
-                  {__('Save', 'static-snap')}
-                </LoadingButton>
-              </Stack>
+                  <Alert severity="info">
+                    <Box>
+                      <p>
+                        {__(
+                          'You can sync the form settings without triggering a new deployment. This will update the form settings on the server, including submit actions and response messages from your plugins',
+                          'static-snap'
+                        )}
+                      </p>
+                    </Box>
+                    <Box justifyContent={'flex-end'} display={'flex'}>
+                      <LoadingButton
+                        size="small"
+                        variant="contained"
+                        onClick={onSync}
+                        loading={syncLoading}
+                      >
+                        Click here to sync form settings
+                      </LoadingButton>
+                    </Box>
+                  </Alert>
+
+                  {/* Save */}
+                  <Stack direction="row" sx={{ mt: 3 }}>
+                    <LoadingButton
+                      type="submit"
+                      variant="contained"
+                      loading={isLoading}
+                      disabled={!isDirty}
+                    >
+                      {__('Save', 'static-snap')}
+                    </LoadingButton>
+                  </Stack>
+                </>
+              )}
             </Stack>
           </FormProvider>
         </CardContent>

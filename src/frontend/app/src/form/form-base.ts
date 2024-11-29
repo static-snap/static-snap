@@ -1,5 +1,8 @@
 import { Events } from '../constants';
 import { __ } from '@wordpress/i18n';
+import FormSubmitResponseInterface, {
+  WebsiteFormSettings,
+} from '../interfaces/form-submit-response.interface';
 
 // jQuery is available in the global scope
 declare const jQuery: any; // eslint-disable-line @typescript-eslint/no-explicit-any
@@ -34,26 +37,46 @@ export default abstract class FormBase {
     //this.bindPluginsEvents();
   }
   /**
+   *
    * This method is called when the form is submitted.
-   * @param e - The event object.
-   * @param form - The form element.
+   * @param e          - The event object.
+   * @param form       - The form element.
    * @param submitData - The data that will be sent to the server.
    * @returns void
    * @example
-   * onSubmit(e: Event, form: HTMLFormElement, submitData: any): void {
+   * onSubmit(e: Event, form: HTMLFormElement, submitData: any): void \{
    *  console.log('Form submitted', e, form, submitData);
-   * }
+   * \}
    * @example
    */
-  protected abstract onSubmit(e: Event, form: HTMLFormElement, submitData: any): void;
+  protected abstract onSubmit(
+    e: Event,
+    form: HTMLFormElement,
+    submitData: any,
+    responseData: FormSubmitResponseInterface
+  ): void;
 
   /**
    * This method is called when an error occurs during form submission.
-   * @param e - The event object.
-   * @param form - The form element.
+   * @param e     - The event object.
+   * @param form  - The form element.
    * @param error - The error object.
    */
   protected abstract onError(e: Event, form: HTMLFormElement, error: any): void;
+
+  protected getFormSettings = (responseData: FormSubmitResponseInterface): WebsiteFormSettings => {
+    const defaultSettings = {
+      messages: {
+        error: __('An error occurred while submitting the form', 'static-snap'),
+        invalid: __('Please enter a valid value.', 'static-snap'),
+        required: __('This field is required.', 'static-snap'),
+        success: __('The form was sent successfully.', 'static-snap'),
+      },
+    };
+
+    // merge default settings with response data
+    return { ...defaultSettings, ...responseData.websiteForm?.website_form_settings };
+  };
 
   /**
    * Get notice message settings
@@ -87,7 +110,7 @@ export default abstract class FormBase {
 
     // if redirect type, we don't need to show any message. We will redirect to the URL
     if (messageSettings.type === 'redirect' && type === 'success' && messageSettings.redirect_url) {
-      window.location.href = messageSettings.redirect_url;
+      //window.location.href = messageSettings.redirect_url;
     }
 
     const messageMap: Record<FormBaseGetNoticeMessageType, string> = {
@@ -190,9 +213,9 @@ export default abstract class FormBase {
           form.reset();
           // emit event
           document.dispatchEvent(
-            new CustomEvent(Events.FORM_SUBMITTED_EVENT, { detail: { form, submitData } })
+            new CustomEvent(Events.FORM_SUBMITTED_EVENT, { detail: { data, form, submitData } })
           );
-          this.onSubmit(event, form, submitData);
+          this.onSubmit(event, form, submitData, data);
         } else {
           console.error('Error:', data);
           document.dispatchEvent(

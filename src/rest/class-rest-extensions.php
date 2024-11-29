@@ -49,6 +49,18 @@ final class Rest_Extensions extends WP_REST_Controller {
 
 			)
 		);
+		register_rest_route(
+			$this->namespace,
+			$this->rest_base . '/forms/sync',
+			array(
+				array(
+					'methods'             => WP_REST_Server::CREATABLE,
+					'callback'            => array( $this, 'sync_forms' ),
+					'permission_callback' => array( $this, 'permissions' ),
+				),
+
+			)
+		);
 
 		register_rest_route(
 			$this->namespace,
@@ -81,6 +93,41 @@ final class Rest_Extensions extends WP_REST_Controller {
 		$extensions = Application::instance()->get_extensions();
 
 		return rest_ensure_response( $extensions );
+	}
+
+	/**
+	 * Sync forms
+	 *
+	 * @param \WP_REST_Request $request Request object.
+	 * @return \WP_REST_Response
+	 */
+	public function sync_forms( $request ) {
+		$extensions = Application::instance()->get_extensions_by_type( 'form' );
+		$sync_data  = array();
+		try {
+			foreach ( $extensions as $extension_name => $extension ) {
+				// just in case it fails with an exception, by default we set it to false.
+				$sync_data[ $extension_name ] = false;
+				$sync_data[ $extension_name ] = $extension->sync_forms_settings();
+			}
+			$extension->sync_forms_settings();
+		} catch ( \Exception $e ) {
+			return rest_ensure_response(
+				array(
+					'saved'      => false,
+					'extensions' => $sync_data,
+					'message'    => $e->getMessage(),
+				)
+			);
+		}
+
+		return rest_ensure_response(
+			array(
+				'saved'      => true,
+				'extensions' => $sync_data,
+				'message'    => __( 'Forms synced successfully', 'static-snap' ),
+			)
+		);
 	}
 
 
