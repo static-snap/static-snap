@@ -306,6 +306,7 @@ final class Elementor_Form_Extension extends Form_Extension_Base {
 			$email_settings    = array();
 			$redirect_settings = null;
 			$popup_settings    = array();
+			$webhooks_settings = array();
 
 			if ( ! empty( $form_settings['email_to'] ) && ! empty( $form_settings['submit_actions'] ) && in_array( 'email', $form_settings['submit_actions'], true ) ) {
 				$email_settings[] =
@@ -339,9 +340,18 @@ final class Elementor_Form_Extension extends Form_Extension_Base {
 			if ( ! empty( $form_settings['popup_action'] ) && ! empty( $form_settings['submit_actions'] ) && in_array( 'popup', $form_settings['submit_actions'], true ) ) {
 				$popup_settings = array(
 					'action'   => $form_settings['popup_action'] ?? null,
-					'popup_id' => $form_settings['popup_id'] ?? null,
+					'popup_id' => $form_settings['popup_action_popup_id'] ?? null,
 				);
 			}
+			if ( ! empty( $form_settings['webhooks'] ) && ! empty( $form_settings['submit_actions'] ) && in_array( 'webhook', $form_settings['submit_actions'], true ) ) {
+				$webhooks_settings[] = array(
+					'url'     => $form_settings['webhooks'] ?? null,
+					'options' => array(
+						'webhooks_advanced_data' => $form_settings['webhooks_advanced_data'] && 'yes' === $form_settings['webhooks_advanced_data'],
+					),
+				);
+			}
+
 			$website_form_settings[] = array(
 				'website_form_website_id'     => Application::instance()->get_wp_installation_md5(),
 				'website_form_name'           => $form_settings['form_name'],
@@ -352,6 +362,7 @@ final class Elementor_Form_Extension extends Form_Extension_Base {
 					'email'          => $email_settings,
 					'redirect_to'    => $redirect_settings,
 					'popup'          => $popup_settings,
+					'webhooks'       => $webhooks_settings,
 					'messages'       => array(
 						'success'  => $form_settings['success_message'] ?? null,
 						'error'    => $form_settings['error_message'] ?? null,

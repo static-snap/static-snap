@@ -1,5 +1,7 @@
-import { Events } from '../constants';
+import ApiResponseInterface from '@staticsnap/dashboard/src/interfaces/api-response.interface';
 import { __ } from '@wordpress/i18n';
+
+import { Events } from '../constants';
 import FormSubmitResponseInterface, {
   WebsiteFormSettings,
 } from '../interfaces/form-submit-response.interface';
@@ -42,7 +44,7 @@ export default abstract class FormBase {
    * @param e          - The event object.
    * @param form       - The form element.
    * @param submitData - The data that will be sent to the server.
-   * @returns void
+   * @return void
    * @example
    * onSubmit(e: Event, form: HTMLFormElement, submitData: any): void \{
    *  console.log('Form submitted', e, form, submitData);
@@ -53,7 +55,7 @@ export default abstract class FormBase {
     e: Event,
     form: HTMLFormElement,
     submitData: any,
-    responseData: FormSubmitResponseInterface
+    responseData: ApiResponseInterface<FormSubmitResponseInterface>
   ): void;
 
   /**
@@ -64,7 +66,14 @@ export default abstract class FormBase {
    */
   protected abstract onError(e: Event, form: HTMLFormElement, error: any): void;
 
-  protected getFormSettings = (responseData: FormSubmitResponseInterface): WebsiteFormSettings => {
+  /**
+   * Get form settings
+   * @param responseData - The response data from the server.
+   * @return WebsiteFormSettings
+   */
+  protected getFormSettings = (
+    responseData: ApiResponseInterface<FormSubmitResponseInterface>
+  ): WebsiteFormSettings => {
     const defaultSettings = {
       messages: {
         error: __('An error occurred while submitting the form', 'static-snap'),
@@ -73,9 +82,12 @@ export default abstract class FormBase {
         success: __('The form was sent successfully.', 'static-snap'),
       },
     };
+    if (!responseData.type || responseData.type !== 'item') {
+      return defaultSettings;
+    }
 
     // merge default settings with response data
-    return { ...defaultSettings, ...responseData.websiteForm?.website_form_settings };
+    return { ...defaultSettings, ...responseData.data.websiteForm?.website_form_settings };
   };
 
   /**

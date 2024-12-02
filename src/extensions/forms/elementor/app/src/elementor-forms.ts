@@ -1,3 +1,16 @@
+declare global {
+  interface Window {
+    elementorProFrontend: {
+      modules: {
+        popup: {
+          closePopup: (popup: { id: string }) => void;
+          showPopup: (popup: { id: string }) => void;
+        };
+      };
+    };
+  }
+}
+import ApiResponseInterface from '@staticsnap/dashboard/src/interfaces/api-response.interface';
 import {
   FormBase,
   FormBaseGetNoticeMessageType,
@@ -22,16 +35,72 @@ export default class ElementorForms extends FormBase {
     _e: Event,
     form: HTMLFormElement,
     _submitData: unknown,
-    responseData: FormSubmitResponseInterface
+    responseData: ApiResponseInterface<FormSubmitResponseInterface>
   ): void {
     const settings = this.getFormSettings(responseData);
-    const knowSubmitActions = ['redirect', 'popup'];
+    const knowSubmitActions = ['redirect', 'popup', 'webhook'];
 
-    this.setMessage(form, responseData.saved ? 'success' : 'error', settings);
+    this.setMessage(
+      form,
+      responseData.type === 'item' && responseData?.data?.saved ? 'success' : 'error',
+      settings
+    );
+    settings?.submit_actions?.some((action) => {
+      if (knowSubmitActions.includes(action)) {
+        if (action === 'redirect') {
+          this.onRedirect(settings);
+        }
+        if (action === 'popup') {
+          this.onPopup(settings);
+        }
+        if (action === 'webhook') {
+          this.onWebhooks(settings, form);
+        }
+      }
+    });
+  }
+
+  protected onRedirect(settings: WebsiteFormSettings): void {
+    if (settings.redirect_to) {
+      window.location.href = settings.redirect_to;
+    }
+  }
+
+  protected onWebhooks(settings: WebsiteFormSettings, form: HTMLFormElement): void {
+    //get all form data
+    const formData = new FormData(form);
+
+    settings.webhooks?.forEach((webhook) => {
+      fetch(webhook.url, {
+        body: JSON.stringify({
+          ...Object.fromEntries(formData),
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        method: 'POST',
+      });
+    });
+  }
+
+  protected onPopup(settings: WebsiteFormSettings): void {
+    if (
+      !settings.popup ||
+      !settings.popup.popup_id ||
+      !window.elementorProFrontend ||
+      !window.elementorProFrontend.modules ||
+      !window.elementorProFrontend.modules.popup
+    ) {
+      return;
+    }
+    if (settings.popup?.action === 'close') {
+      window.elementorProFrontend.modules.popup.closePopup({ id: settings.popup.popup_id });
+    } else {
+      window.elementorProFrontend.modules.popup.showPopup({ id: settings.popup.popup_id });
+    }
   }
 
   protected onError(_e: Event, form: HTMLFormElement, _error: unknown): void {
-    //console.log('ElementorForms onError', e, form, error);
     this.setMessage(form, 'error', {
       messages: {
         error: __('An error occurred, please try again later.', 'static-snap'),
