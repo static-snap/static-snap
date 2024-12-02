@@ -9,6 +9,10 @@ export interface WebsiteFormSettings {
     to: null | string;
   }>;
   redirect_to?: null | string;
+  webhooks?: Array<{
+    url: string;
+    webhook_advanced_data?: boolean;
+  }>;
   popup?: null | {
     action: string | null;
     popup_id: string | null;
