@@ -48,6 +48,9 @@ This plugin utilizes third-party services to provide certain functionalities. Be
    - **Terms of Service and Privacy Policy**: [Static Snap Terms of Service](https://staticsnap.com/terms-and-conditions) | [Static Snap Privacy Policy](https://staticsnap.com/privacy-policy)
 
 == Changelog ==
+= 0.2.7 - 2024-12-03 =
+* Add Submit Actions API: Enables sending emails, displaying popups, redirecting, and executing webhooks after a form is submitted. Currently, this feature is exclusive to Elementor forms.
+
 = 0.2.6 - 2024-11-22 =
 * Fetch assets after fetching posts to address Elementor’s uncompiled CSS not generating during build time
 * Ensure the tooltip and menu appear above the admin menu bar when they are too close
