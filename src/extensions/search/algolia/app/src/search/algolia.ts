@@ -1,7 +1,7 @@
-import { MultipleQueriesResponse } from '@algolia/client-search';
+import { SearchResponses } from '@algolia/client-search';
 import { Frontend, SearchModuleInterface } from '@staticsnap/frontend';
 import { __ } from '@wordpress/i18n';
-import initAlgolia, { SearchClient } from 'algoliasearch';
+import { algoliasearch, SearchClient } from 'algoliasearch';
 import { SearchResponse } from 'instantsearch.js';
 import Mustache from 'mustache';
 
@@ -18,7 +18,7 @@ class Algolia implements SearchModuleInterface {
   constructor(frontend: Frontend) {
     this.frontend = frontend;
     this.settings = this.frontend.config().options.search.settings as AlgoliaSettings;
-    this.client = initAlgolia(
+    this.client = algoliasearch(
       this.settings.algolia_application_id,
       this.settings.algolia_search_key
     );
@@ -26,7 +26,7 @@ class Algolia implements SearchModuleInterface {
   public getType(): string {
     return 'algolia';
   }
-  public async search(query: string): Promise<MultipleQueriesResponse<DocumentType>> {
+  public async search(query: string): Promise<SearchResponses<DocumentType>> {
     const locale = this.frontend.config().locale || null;
     const has_translations = this.frontend.config().has_translations || false;
     const params: Record<string, string[] | string> = {};
@@ -56,7 +56,7 @@ class Algolia implements SearchModuleInterface {
       return { results: [] };
     }
   }
-  public renderResults(target: HTMLElement, results: MultipleQueriesResponse<DocumentType>): void {
+  public renderResults(target: HTMLElement, results: SearchResponses<DocumentType>): void {
     if (!results.results) {
       return;
     }

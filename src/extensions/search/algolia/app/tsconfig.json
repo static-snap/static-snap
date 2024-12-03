@@ -6,7 +6,8 @@
     "declaration": true,
     "outDir": "./dist",
     "tsBuildInfoFile": "./dist/.tsbuildinfo",
-    "typeRoots": ["./node_modules/@types"],
+    "types": ["google.maps"],
+    //"typeRoots": ["./node_modules/@types"],
     "paths": {
       //"@staticsnap/frontend": ["../../../../frontend/app/src/index.ts"],
       //"@staticsnap/frontend/*": ["../../../../frontend/app/src/*"]

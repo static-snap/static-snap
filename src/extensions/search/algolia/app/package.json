@@ -18,7 +18,10 @@
   },
   "dependencies": {
     "@staticsnap/frontend": "*",
-    "algoliasearch": "^4.23.3",
-    "instantsearch.js": "^4.69.0"
+    "algoliasearch": "^5.15.0",
+    "instantsearch.js": "^4.75.5"
+  },
+  "devDependencies": {
+    "@types/google.maps": "^3.58.1"
   }
 }
