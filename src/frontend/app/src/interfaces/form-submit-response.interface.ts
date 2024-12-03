@@ -7,6 +7,7 @@ export interface WebsiteFormSettings {
     from_name: null | string;
     subject: null | string;
     to: null | string;
+    content: null | string;
   }>;
   redirect_to?: null | string;
   webhooks?: Array<{

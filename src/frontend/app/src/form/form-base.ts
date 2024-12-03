@@ -1,4 +1,4 @@
-import ApiResponseInterface from '@staticsnap/dashboard/src/interfaces/api-response.interface';
+import ApiResponseInterface from '@staticsnap/frontend/src/interfaces/api-response.interface';
 import { __ } from '@wordpress/i18n';
 
 import { Events } from '../constants';

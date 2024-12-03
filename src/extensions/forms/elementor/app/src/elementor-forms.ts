@@ -10,13 +10,13 @@ declare global {
     };
   }
 }
-import ApiResponseInterface from '@staticsnap/dashboard/src/interfaces/api-response.interface';
 import {
   FormBase,
   FormBaseGetNoticeMessageType,
   FormSubmitResponseInterface,
   WebsiteFormSettings,
 } from '@staticsnap/frontend';
+import ApiResponseInterface from '@staticsnap/frontend/src/interfaces/api-response.interface';
 import { __ } from '@wordpress/i18n';
 
 export default class ElementorForms extends FormBase {

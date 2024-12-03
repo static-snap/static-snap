@@ -317,6 +317,7 @@ final class Elementor_Form_Extension extends Form_Extension_Base {
 						'from_name' => $form_settings['email_from_name'] ?? null,
 						'cc'        => $form_settings['email_cc'] ?? null,
 						'bcc'       => $form_settings['email_bcc'] ?? null,
+						'content'   => $form_settings['email_content'] ?? null,
 					);
 			}
 
@@ -329,6 +330,7 @@ final class Elementor_Form_Extension extends Form_Extension_Base {
 						'from_name' => $form_settings['email_from_name_2'] ?? null,
 						'cc'        => $form_settings['email_cc_2'] ?? null,
 						'bcc'       => $form_settings['email_bcc_2'] ?? null,
+						'content'   => $form_settings['email_content_2'] ?? null,
 
 					);
 
