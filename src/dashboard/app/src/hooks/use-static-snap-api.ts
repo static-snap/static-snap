@@ -1,8 +1,7 @@
 import { useCallback } from 'react';
 
+import ApiResponseInterface from '@staticsnap/frontend/src/interfaces/api-response.interface';
 import apiFetch, { APIFetchOptions } from '@wordpress/api-fetch';
-
-import ApiResponseInterface from '../interfaces/api-response.interface';
 
 const STATIC_SNAP_API_PROXY_PATH = '/static-snap/v1/api-proxy';
 
