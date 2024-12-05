@@ -29,6 +29,8 @@ final class Deployment_Task_Manager {
 	public const SEARCH_PREPARE_TASK = 'StaticSnap\Deployment\Deploy\Search_Prepare_Task';
 	public const SEARCH_TASK         = 'StaticSnap\Deployment\Deploy\Search_Task';
 
+	public const FORMS_TASK = 'StaticSnap\Deployment\Deploy\Forms_Task';
+
 	/**
 	 * Current task
 	 *
@@ -159,6 +161,7 @@ final class Deployment_Task_Manager {
 			self::ZIP_TASK,
 			self::SEARCH_PREPARE_TASK,
 			self::SEARCH_TASK,
+			self::FORMS_TASK,
 		);
 		// add plugin tasks.
 		$tasks = apply_filters( Filters::DEPLOYMENT_TASKS, $tasks );

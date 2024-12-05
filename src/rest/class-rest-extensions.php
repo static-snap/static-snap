@@ -110,7 +110,6 @@ final class Rest_Extensions extends WP_REST_Controller {
 				$sync_data[ $extension_name ] = false;
 				$sync_data[ $extension_name ] = $extension->sync_forms_settings();
 			}
-			$extension->sync_forms_settings();
 		} catch ( \Exception $e ) {
 			return rest_ensure_response(
 				array(
