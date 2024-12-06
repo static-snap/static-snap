@@ -147,6 +147,7 @@ final class Gravity_Forms_Extension extends Form_Extension_Base {
 	/**
 	 * Build placeholders
 	 *
+	 * @param array $form The form.
 	 * @return array
 	 */
 	public function build_placeholders( $form ) {
@@ -164,6 +165,9 @@ final class Gravity_Forms_Extension extends Form_Extension_Base {
 	/**
 	 * Replace placeholders
 	 * This method is used to replace placeholders in the form settings
+	 *
+	 * @param string $str The string to replace the placeholders in.
+	 * @param array  $placeholders The placeholders to replace.
 	 */
 	public function replace_placeholders( $str, $placeholders ) {
 		foreach ( $placeholders as $placeholder => $value ) {
