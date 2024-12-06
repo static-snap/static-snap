@@ -182,20 +182,19 @@ const FormSettings = ({ title }: FormSettingsProps) => {
                       </LoadingButton>
                     </Box>
                   </Alert>
-
-                  {/* Save */}
-                  <Stack direction="row" sx={{ mt: 3 }}>
-                    <LoadingButton
-                      type="submit"
-                      variant="contained"
-                      loading={isLoading}
-                      disabled={!isDirty}
-                    >
-                      {__('Save', 'static-snap')}
-                    </LoadingButton>
-                  </Stack>
                 </>
               )}
+              {/* Save */}
+              <Stack direction="row" sx={{ mt: 3 }}>
+                <LoadingButton
+                  type="submit"
+                  variant="contained"
+                  loading={isLoading}
+                  disabled={!isDirty}
+                >
+                  {__('Save', 'static-snap')}
+                </LoadingButton>
+              </Stack>
             </Stack>
           </FormProvider>
         </CardContent>
