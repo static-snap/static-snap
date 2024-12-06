@@ -3,7 +3,7 @@ Contributors: staticsnap
 Tags: static site generator, performance, SEO, security, headless
 Requires at least: 6.5.0
 Tested up to: 6.7.1
-Stable tag: 0.2.7
+Stable tag: 0.2.8
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -48,6 +48,10 @@ This plugin utilizes third-party services to provide certain functionalities. Be
    - **Terms of Service and Privacy Policy**: [Static Snap Terms of Service](https://staticsnap.com/terms-and-conditions) | [Static Snap Privacy Policy](https://staticsnap.com/privacy-policy)
 
 == Changelog ==
+= 0.2.8 - 2024-12-06 =
+* Add support for Gravity Forms email notifications.
+* Allow to disable forms after they have been enabled.
+
 = 0.2.7 - 2024-12-03 =
 * Add Submit Actions API: Enables sending emails, displaying popups, redirecting, and executing webhooks after a form is submitted. Currently, this feature is exclusive to Elementor forms.
 
