@@ -1,7 +1,8 @@
 <?php
 
-// Contact Form 7 Classes
+
 namespace {
+	// Contact Form 7 Classes
     class WPCF7_ContactForm {
         public static function get_current() {
             return new self();
@@ -17,6 +18,27 @@ namespace {
             return 'Example Title';
         }
     }
+
+	// Gravity forms
+	class GFAPI {
+		public static function get_form( $id ) {
+			return array(
+				'id'     => 1,
+				'title'  => 'Example Title',
+				'fields' => array(),
+			);
+		}
+
+		public static function get_forms(  ) {
+			return array(
+				array(
+					'id'     => 1,
+					'title'  => 'Example Title',
+					'fields' => array(),
+				)
+			);
+		}
+	}
 }
 namespace Elementor{
 	class Element_Base {
