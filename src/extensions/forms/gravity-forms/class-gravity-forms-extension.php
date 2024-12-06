@@ -7,6 +7,7 @@
 
 namespace StaticSnap\Extensions\Forms\Gravity_Forms;
 
+use StaticSnap\API\API;
 use StaticSnap\Forms\Form_Extension_Base;
 use StaticSnap\Application;
 use StaticSnap\Connect\Connect;
@@ -122,7 +123,7 @@ final class Gravity_Forms_Extension extends Form_Extension_Base {
 		$hidden_fields .= $this->add_hidden_field( self::TOKEN_FIELD_NAME, $this->get_website_token() );
 		$hidden_fields .= $this->add_hidden_field( self::FORM_NAME_FIELD_NAME, $form_data['title'] );
 		$hidden_fields .= $this->add_hidden_field( self::FORM_ID_FIELD_NAME, $form_data['id'] );
-		$hidden_fields .= $this->add_hidden_field( self::FORM_TYPE_FIELD_NAME, 'wpforms' );
+		$hidden_fields .= $this->add_hidden_field( self::FORM_TYPE_FIELD_NAME, 'gravity-forms' );
 		return $hidden_fields;
 	}
 
@@ -140,5 +141,117 @@ final class Gravity_Forms_Extension extends Form_Extension_Base {
 		$asset_file         = include STATIC_SNAP_PLUGIN_DIR . '/assets/js/gravity-forms.asset.php';
 		$asset_dependencies = $asset_file['dependencies'];
 		wp_enqueue_script( 'static-snap-gravity-forms', STATIC_SNAP_PLUGIN_URL . '/assets/js/gravity-forms.js', $asset_dependencies, $asset_file['version'], true );
+	}
+
+
+	/**
+	 * Build placeholders
+	 *
+	 * @return array
+	 */
+	public function build_placeholders( $form ) {
+
+		$placeholders = array(
+			'{admin_email}' => get_option( 'admin_email' ),
+			'{site_url}'    => get_site_url(),
+			'{form_id}'     => $form['id'],
+			'{form_title}'  => $form['title'],
+		);
+
+		return $placeholders;
+	}
+
+	/**
+	 * Replace placeholders
+	 * This method is used to replace placeholders in the form settings
+	 */
+	public function replace_placeholders( $str, $placeholders ) {
+		foreach ( $placeholders as $placeholder => $value ) {
+			$str = str_replace( $placeholder, $value, $str );
+		}
+		return $str;
+	}
+
+	/**
+	 * Sync forms settings
+	 * This method is used to sync form settings with the static snap server
+	 *
+	 * @return bool True if the forms settings were synced successfully; false otherwise.
+	 */
+	public function sync_forms_settings() {
+		// check if |GFAPI| class exists.
+		if ( ! is_plugin_active( 'gravityforms/gravityforms.php' ) || ! class_exists( '\GFAPI' ) ) {
+			return false;
+		}
+
+		$forms                 = \GFAPI::get_forms();
+		$website_form_settings = array();
+
+		foreach ( $forms as $form ) {
+			$email_settings    = array();
+			$redirect_settings = null;
+			$popup_settings    = array();
+			$webhooks_settings = array();
+			$success_message   = null;
+			$placeholders      = $this->build_placeholders( $form );
+
+			if ( ! empty( $form['confirmations'] ) ) {
+				$confirmation_settings = array_shift( $form['confirmations'] );
+
+				switch ( $confirmation_settings['type'] ) {
+					case 'message':
+						$success_message = $confirmation_settings['message'];
+						break;
+					case 'page':
+						$redirect_settings = get_permalink( $confirmation_settings['page'] );
+						break;
+					case 'redirect':
+						$redirect_settings = $confirmation_settings['url'];
+						break;
+				}
+			}
+			if ( ! empty( $form['notifications'] ) ) {
+				foreach ( $form['notifications'] as $notification ) {
+					if ( 'email' !== $notification['toType'] ) {
+						continue;
+					}
+					$email_settings[] = array(
+						'to'      => $notification['to'] ? $this->replace_placeholders( $notification['to'], $placeholders ) : get_option( 'admin_email' ),
+						'cc'      => $notification['cc'] ? $this->replace_placeholders( $notification['cc'], $placeholders ) : null,
+						'bcc'     => $notification['bcc'] ? $this->replace_placeholders( $notification['bcc'], $placeholders ) : null,
+						'subject' => $this->replace_placeholders( $notification['subject'], $placeholders ),
+						'content' => $this->replace_placeholders( $notification['message'], $placeholders ),
+					);
+				}
+			}
+
+			$website_form_settings[] = array(
+				'website_form_website_id'     => Application::instance()->get_wp_installation_md5(),
+				'website_form_name'           => $form['title'],
+				'website_form_id'             => strval( $form['id'] ),
+				'webiste_form_extension_name' => $this->get_name(),
+				'website_form_settings'       => array(
+					'submit_actions' => empty( $email_settings ) ? array() : array( 'email' ),
+					'email'          => $email_settings,
+					'redirect_to'    => $redirect_settings,
+					'popup'          => $popup_settings,
+					'webhooks'       => $webhooks_settings,
+					'messages'       => array(
+						'success' => $success_message,
+					),
+				),
+			);
+		}
+
+		$api = new API();
+		$api->post(
+			'/website-forms/sync/' . $this->get_name(),
+			array(
+				'website_id' => Application::instance()->get_wp_installation_md5(),
+				'data'       => $website_form_settings,
+			)
+		);
+
+		return true;
 	}
 }
