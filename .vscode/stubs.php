@@ -8,6 +8,10 @@ namespace {
             return new self();
         }
 
+		public static function find(){
+			return array();
+		}
+
         /** @return int */
         public function id() {
             return 1;
