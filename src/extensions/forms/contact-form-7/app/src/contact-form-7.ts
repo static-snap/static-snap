@@ -1,4 +1,11 @@
-import { FormBase, FormBaseGetNoticeMessageType } from '@staticsnap/frontend';
+import {
+  FormBase,
+  FormBaseGetNoticeMessageType,
+  FormSubmitResponseInterface,
+  WebsiteFormSettings,
+} from '@staticsnap/frontend';
+import ApiResponseInterface from '@staticsnap/frontend/src/interfaces/api-response.interface';
+import { __ } from '@wordpress/i18n';
 
 export default class ContactForm7 extends FormBase {
   private extensionMessagesClasses: Record<FormBaseGetNoticeMessageType, string> = {
@@ -12,17 +19,48 @@ export default class ContactForm7 extends FormBase {
     super('[data-static-snap-type="form"][data-static-snap-form-type="contact-form-7"]');
   }
 
-  protected onSubmit(_e: Event, form: HTMLFormElement, _submitData: unknown): void {
-    this.setMessage(form, 'success');
+  protected onSubmit(
+    _e: Event,
+    form: HTMLFormElement,
+    _submitData: unknown,
+    responseData: ApiResponseInterface<FormSubmitResponseInterface>
+  ): void {
+    const settings = this.getFormSettings(responseData);
+
+    this.setMessage(
+      form,
+      responseData.type === 'item' && responseData?.data?.saved ? 'success' : 'error',
+      settings
+    );
   }
 
   protected onError(_e: Event, form: HTMLFormElement, _error: unknown): void {
-    this.setMessage(form, 'error');
+    this.setMessage(form, 'error', {
+      messages: {
+        error: __('An error occurred, please try again later.', 'static-snap'),
+        invalid: '',
+        required: '',
+        success: '',
+      },
+    });
   }
 
-  private setMessage(form: HTMLFormElement, type: FormBaseGetNoticeMessageType): void {
+  private setMessage(
+    form: HTMLFormElement,
+    type: FormBaseGetNoticeMessageType,
+    settings: WebsiteFormSettings
+  ): void {
+    const matchTypeToMessage = {
+      error: settings?.messages?.error,
+      field_error: settings?.messages?.required,
+      invalid_error: settings?.messages?.invalid,
+      success: settings?.messages?.success,
+    };
+
     const noticeElement = this.getNoticeElement(form);
-    const message = this.getNoticeMessageOrRedirect(form, type);
+    const message =
+      matchTypeToMessage[type] || __('An error occurred, please try again later.', 'static-snap');
+
     noticeElement.textContent = message;
     const messageClass = this.extensionMessagesClasses[type];
     // remove other form classes
