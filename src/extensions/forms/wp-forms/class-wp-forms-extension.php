@@ -102,7 +102,7 @@ final class WP_Forms_Extension extends Form_Extension_Base {
 	 * Get name
 	 */
 	public function get_name(): string {
-		return 'contact-form-7';
+		return 'wp-forms';
 	}
 
 	/**
