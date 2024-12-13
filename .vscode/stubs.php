@@ -2,6 +2,30 @@
 
 
 namespace {
+	// WPForms
+	class WPForms_Form_Handler {
+		public static function get_instance() {
+			return new self();
+		}
+		public function get() {
+			return array();
+		}
+	}
+	class WPForms {
+		// phpcs:ignore
+		public $form = new WPForms_Form_Handler();
+		public static function get_instance() {
+			return new self();
+		}
+		public function get() {
+			return array();
+		}
+	}
+
+	function WPForms() {
+		return WPForms::get_instance();
+	}
+
 	// Contact Form 7 Classes
     class WPCF7_ContactForm {
         public static function get_current() {
