@@ -298,6 +298,9 @@ final class Elementor_Form_Extension extends Form_Extension_Base {
 	 * @return bool True if the forms settings were synced successfully; false otherwise.
 	 */
 	public function sync_forms_settings() {
+		if ( ! is_plugin_active( 'elementor-pro/elementor-pro.php' ) ) {
+			return false;
+		}
 
 		$forms                 = $this->get_all_forms();
 		$website_form_settings = array();
