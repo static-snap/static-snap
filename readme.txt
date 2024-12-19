@@ -3,7 +3,7 @@ Contributors: staticsnap
 Tags: static site generator, performance, SEO, security, headless
 Requires at least: 6.5.0
 Tested up to: 6.7.1
-Stable tag: 0.3.0
+Stable tag: 0.3.1
 Requires PHP: 7.4
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -48,6 +48,9 @@ This plugin utilizes third-party services to provide certain functionalities. Be
    - **Terms of Service and Privacy Policy**: [Static Snap Terms of Service](https://staticsnap.com/terms-and-conditions) | [Static Snap Privacy Policy](https://staticsnap.com/privacy-policy)
 
 == Changelog ==
+= 0.3.1 - 2024-12-19 =
+* Bugs fixes
+
 = 0.3.0 - 2024-12-13 =
 * Add support for WP Forms Lite
 
