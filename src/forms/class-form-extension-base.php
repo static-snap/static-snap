@@ -130,11 +130,11 @@ abstract class Form_Extension_Base extends Extension_Base {
 			return $options;
 		}
 
-		$captcha_type   = $options['captcha_type'] ?? '';
+		$captcha_type       = $options['captcha_type'] ?? '';
 		$captcha_site_key   = $options['captcha_site_key'] ?? '';
 		$captcha_secret_key = $options['_captcha_secret_key'] ?? '';
 
-		if (empty($captcha_type) || empty( $captcha_site_key ) || empty( $captcha_secret_key ) ) {
+		if ( empty( $captcha_type ) || empty( $captcha_site_key ) || empty( $captcha_secret_key ) ) {
 			throw new \Exception( 'Captcha Type, Site Key and Secret Key are required.' );
 		}
 
@@ -149,14 +149,13 @@ abstract class Form_Extension_Base extends Extension_Base {
 				),
 				'body' => wp_json_encode(
 					array(
-						'website_id'                  => Application::instance()->get_wp_installation_md5(),
-						'website_captcha_type'                => $captcha_type,
-						'website_captcha_secret_key'		  => $captcha_secret_key,
+						'website_id'                 => Application::instance()->get_wp_installation_md5(),
+						'website_captcha_type'       => $captcha_type,
+						'website_captcha_secret_key' => $captcha_secret_key,
 					)
 				),
 			)
 		);
-
 
 			$is_wp_error = is_wp_error( $response );
 
@@ -182,7 +181,7 @@ abstract class Form_Extension_Base extends Extension_Base {
 	 * @return array
 	 */
 	public function frontend_localize_data( $data ) {
-		$data['captcha_type'] = $this->get_captcha_type();
+		$data['captcha_type']     = $this->get_captcha_type();
 		$data['captcha_site_key'] = $this->get_captcha_site_key();
 		return $data;
 	}
