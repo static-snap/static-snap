@@ -54,7 +54,7 @@ final class Connect extends Base {
 		$data      = array();
 
 		// in case we have google recaptcha secret key.
-		$website_captcha_secret_key = Options::instance()->get( 'forms.captcha_site_key', '' );
+		$website_captcha_secret_key = Options::instance()->get( 'forms._captcha_secret_key', '' );
 		$website_captch_type = Options::instance()->get( 'forms.captcha_type', '' );
 
 		$response = wp_remote_post(
