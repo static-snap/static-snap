@@ -55,18 +55,18 @@ final class Connect extends Base {
 
 		// in case we have google recaptcha secret key.
 		$website_captcha_secret_key = Options::instance()->get( 'forms._captcha_secret_key', '' );
-		$website_captch_type = Options::instance()->get( 'forms.captcha_type', '' );
+		$website_captch_type        = Options::instance()->get( 'forms.captcha_type', '' );
 
 		$response = wp_remote_post(
 			$this->app->get_static_snap_api_url( '/websites/connect' ),
 			array(
 				'body' => wp_json_encode(
 					array(
-						'code'         => $code,
-						'website_id'   => Application::instance()->get_wp_installation_md5(),
-						'website_url'  => get_site_url(),
-						'website_name' => get_bloginfo( 'name' ),
-						'website_captcha_type' => $website_captch_type,
+						'code'                       => $code,
+						'website_id'                 => Application::instance()->get_wp_installation_md5(),
+						'website_url'                => get_site_url(),
+						'website_name'               => get_bloginfo( 'name' ),
+						'website_captcha_type'       => $website_captch_type,
 						'website_captcha_secret_key' => $website_captcha_secret_key,
 					)
 				),
