@@ -1,5 +1,6 @@
 export default interface FormSettingInterface {
   enabled: boolean;
-  google_recaptcha_site_key?: string;
-  _google_recaptcha_secret_key?: string;
+  captcha_site_key?: string;
+  captcha_type?: 'powcaptcha' | 'recaptcha';
+  _captcha_secret_key?: string;
 }

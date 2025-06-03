@@ -10,7 +10,8 @@ import FormSubmitResponseInterface, {
 declare const jQuery: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 declare const grecaptcha: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 declare const StaticSnapFrontendConfig: {
-  recaptcha_site_key: string;
+  captcha_type: string;
+  captcha_site_key: string;
 };
 
 export type FormBaseNoticeMessageSettings = {
@@ -34,7 +35,15 @@ export default abstract class FormBase {
     if (selector) {
       this.selector = selector;
     }
-    this.loadGoogleRecaptcha();
+
+    if (['powcaptcha', 'recaptcha'].includes(StaticSnapFrontendConfig.captcha_type)) {
+      if (StaticSnapFrontendConfig.captcha_type === 'recaptcha') {
+        this.loadGoogleRecaptcha();
+      } else if (StaticSnapFrontendConfig.captcha_type === 'powcaptcha') {
+        this.loadPowCaptcha();
+      }
+    }
+
     this.bindEvents();
     //this.bindPluginsEvents();
   }
@@ -135,9 +144,18 @@ export default abstract class FormBase {
     return messageMap[type] || '';
   };
 
+  protected loadPowCaptcha = () => {
+    const script = document.createElement('script');
+    script.src = 'https://js.powcaptcha.com/widget.js';
+    script.async = true;
+    script.defer = true;
+    script.type = 'module';
+    document.head.appendChild(script);
+  };
+
   protected loadGoogleRecaptcha = () => {
     const script = document.createElement('script');
-    script.src = `https://www.google.com/recaptcha/api.js?render=${StaticSnapFrontendConfig.recaptcha_site_key}`;
+    script.src = `https://www.google.com/recaptcha/api.js?render=${StaticSnapFrontendConfig.captcha_site_key}`;
     script.async = true;
     script.defer = true;
     document.head.appendChild(script);
@@ -172,9 +190,63 @@ export default abstract class FormBase {
       // remove all jQuery submit events
       this.unbindSubmitEvents(form);
       // add a new submit event
+
+      // if is powcaptcha, we need to add the powcaptcha widget
+      if (StaticSnapFrontendConfig.captcha_type === 'powcaptcha') {
+        const powcaptchaWidget = document.createElement('powcaptcha-widget');
+        powcaptchaWidget.setAttribute('data-app-id', StaticSnapFrontendConfig.captcha_site_key);
+        powcaptchaWidget.setAttribute('data-invisible', 'true');
+
+        form.appendChild(powcaptchaWidget);
+        this.bindPowCaptchaEvents(form, powcaptchaWidget);
+      }
+
       form.addEventListener('submit', (e) => this.submit(e, form));
       // mark form as initialized
       form.setAttribute('data-static-snap-initialized', 'true');
+    });
+  };
+
+  protected bindPowCaptchaEvents = (form: HTMLFormElement, powcaptchaWidget: any) => {
+    let signalsReady = false;
+    let haveError = false;
+    const timeoutMs = 5000; // 5 seconds timeout to get signals
+
+    powcaptchaWidget.addEventListener('@powcaptcha/widget/error', function () {
+      if (haveError) {
+        return;
+      }
+      haveError = true;
+      console.error('Please check your PowCaptcha configuration.');
+    });
+
+    setTimeout(() => {
+      signalsReady = true;
+    }, timeoutMs);
+
+    async function resolveIfSignalsAreReady() {
+      try {
+        if (
+          !signalsReady ||
+          powcaptchaWidget.isLoading() ||
+          powcaptchaWidget.isValidated() ||
+          haveError
+        ) {
+          return;
+        }
+
+        await powcaptchaWidget.execute();
+      } catch (e) {
+        console.error('PowCaptcha execution failed:', e);
+        haveError = true;
+      }
+    }
+
+    // watch form fields
+    const fields = form.querySelectorAll('input, textarea, select') as NodeListOf<HTMLInputElement>;
+    fields.forEach((field: HTMLInputElement) => {
+      field.addEventListener('focus', resolveIfSignalsAreReady);
+      field.addEventListener('keydown', resolveIfSignalsAreReady);
     });
   };
 
@@ -198,11 +270,23 @@ export default abstract class FormBase {
 
     form.querySelector(this.submitButtonSelector)?.setAttribute('disabled', 'disabled');
 
-    const submitFormDataWithGoogleRecaptcha = async () => {
+    const submitFormDataWithCaptcha = async () => {
       try {
-        const token = await grecaptcha.execute(StaticSnapFrontendConfig.recaptcha_site_key, {
-          action: 'submit',
-        });
+        let token = '';
+        if (StaticSnapFrontendConfig.captcha_type === 'powcaptcha') {
+          const powcaptchaWidget = form.querySelector('powcaptcha-widget');
+
+          token =
+            (await (
+              powcaptchaWidget as unknown as {
+                execute: () => Promise<string>;
+              }
+            )?.execute()) || '';
+        } else if (StaticSnapFrontendConfig.captcha_type === 'recaptcha') {
+          token = await grecaptcha.execute(StaticSnapFrontendConfig.captcha_site_key, {
+            action: 'submit',
+          });
+        }
 
         const formData = new FormData(form);
         // send form data to action URL as json
@@ -211,9 +295,8 @@ export default abstract class FormBase {
         const response = (await fetch(form.action, {
           body: JSON.stringify(submitData),
           headers: {
+            'Captcha-Response': token,
             'Content-Type': 'application/json',
-            // recaptcha token
-            'G-Recaptcha-Response': token,
           },
           method: 'POST',
         })) as Response;
@@ -246,7 +329,11 @@ export default abstract class FormBase {
     };
 
     try {
-      await grecaptcha.ready(submitFormDataWithGoogleRecaptcha);
+      if (StaticSnapFrontendConfig.captcha_type === 'recaptcha') {
+        await grecaptcha.ready(submitFormDataWithCaptcha);
+      } else {
+        await submitFormDataWithCaptcha();
+      }
     } catch (e) {
       console.error(e);
     }

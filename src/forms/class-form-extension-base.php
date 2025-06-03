@@ -97,17 +97,23 @@ abstract class Form_Extension_Base extends Extension_Base {
 	}
 
 	/**
+	 * Get recaptcha type
+	 */
+	public function get_captcha_type(): string {
+		return Options::instance()->get( 'forms.captcha_type' );
+	}
+	/**
 	 * Get recaptcha site key
 	 */
-	public function get_recaptcha_site_key() {
-		return Options::instance()->get( 'forms.google_recaptcha_site_key' );
+	public function get_captcha_site_key() {
+		return Options::instance()->get( 'forms.captcha_site_key' );
 	}
 
 	/**
 	 * Get recaptcha secret key
 	 */
-	public function get_recaptcha_secret_key(): string {
-		return Options::instance()->get( 'forms._google_recaptcha_secret_key' );
+	public function get_captcha_secret_key(): string {
+		return Options::instance()->get( 'forms._captcha_secret_key' );
 	}
 
 
@@ -123,19 +129,20 @@ abstract class Form_Extension_Base extends Extension_Base {
 		if ( ! $options['enabled'] ) {
 			return $options;
 		}
-		// get google recaptcha site key and secret key.
-		$google_recaptcha_site_key   = $options['google_recaptcha_site_key'] ?? '';
-		$google_recaptcha_secret_key = $options['_google_recaptcha_secret_key'] ?? '';
-		// check if google recaptcha site key and secret are valid.
-		if ( empty( $google_recaptcha_site_key ) || empty( $google_recaptcha_secret_key ) ) {
-			throw new \Exception( 'Google Recaptcha Site Key and Secret Key are required.' );
+
+		$captcha_type   = $options['captcha_type'] ?? '';
+		$captcha_site_key   = $options['captcha_site_key'] ?? '';
+		$captcha_secret_key = $options['_captcha_secret_key'] ?? '';
+
+		if (empty($captcha_type) || empty( $captcha_site_key ) || empty( $captcha_secret_key ) ) {
+			throw new \Exception( 'Captcha Type, Site Key and Secret Key are required.' );
 		}
 
 		$options_instance = Options::instance();
 		$access_token     = $options_instance->get( 'connect' )['installation_access_token'];
 
 		$response = wp_remote_post(
-			$this->app->get_static_snap_api_url( '/websites/update-recaptcha-secret-key' ),
+			$this->app->get_static_snap_api_url( '/websites/update-captcha-secret-key' ),
 			array(
 				'headers' => array(
 					'Authorization' => 'Bearer ' . $access_token,
@@ -143,11 +150,13 @@ abstract class Form_Extension_Base extends Extension_Base {
 				'body' => wp_json_encode(
 					array(
 						'website_id'                  => Application::instance()->get_wp_installation_md5(),
-						'google_recaptcha_secret_key' => $google_recaptcha_secret_key,
+						'website_captcha_type'                => $captcha_type,
+						'website_captcha_secret_key'		  => $captcha_secret_key,
 					)
 				),
 			)
 		);
+
 
 			$is_wp_error = is_wp_error( $response );
 
@@ -163,7 +172,7 @@ abstract class Form_Extension_Base extends Extension_Base {
 		}
 
 		// phpcs:ignore
-		throw new \Exception( __( 'Google Recaptcha Site Key and Secret Key are invalid.', 'static-snap' ) );
+		throw new \Exception( __( 'Captcha Site Key and Secret Key are invalid.', 'static-snap' ) );
 	}
 
 	/**
@@ -173,7 +182,8 @@ abstract class Form_Extension_Base extends Extension_Base {
 	 * @return array
 	 */
 	public function frontend_localize_data( $data ) {
-		$data['recaptcha_site_key'] = $this->get_recaptcha_site_key();
+		$data['captcha_type'] = $this->get_captcha_type();
+		$data['captcha_site_key'] = $this->get_captcha_site_key();
 		return $data;
 	}
 

@@ -20,6 +20,7 @@ import ConnectFallback from '../connect-fallback';
 import TextField from '../form/text-field';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
+import Select from '../form/select';
 
 type FormSettingsProps = {
   title: string;
@@ -36,9 +37,10 @@ const FormSettings = ({ title }: FormSettingsProps) => {
   const [syncLoading, setSyncLoading] = useState(false);
 
   const defaultValues: FormSettingInterface = {
-    _google_recaptcha_secret_key: '',
+    _captcha_secret_key: '',
+    captcha_site_key: '',
+    captcha_type: 'powcaptcha',
     enabled: false,
-    google_recaptcha_site_key: '',
   };
 
   const methods = useForm({
@@ -132,33 +134,45 @@ const FormSettings = ({ title }: FormSettingsProps) => {
               <Switch name="enabled" label={__('Enable forms', 'static-snap')} />
               {enabled && (
                 <>
+                  {/* Captcha type */}
+                  <Select
+                    name="captcha_type"
+                    label={__('Captcha Type', 'static-snap')}
+                    items={[
+                      { value: 'powcaptcha', label: __('PowCaptcha', 'static-snap') },
+                      { value: 'recaptcha', label: __('Recaptcha', 'static-snap') },
+                    ]}
+                    helperText={sprintf(
+                      __(
+                        'Select the captcha type to use for your forms. Default is %s.',
+                        'static-snap'
+                      ),
+                      __('Recaptcha', 'static-snap')
+                    )}
+                  />
                   {/* Recaptcha public Key */}
                   <TextField
-                    name="google_recaptcha_site_key"
-                    label={__('Recaptcha public Key', 'static-snap')}
+                    name="captcha_site_key"
+                    label={__('Captcha public Key', 'static-snap')}
                   />
 
                   {/* Recaptcha Secret Key */}
                   <TextField
-                    name="_google_recaptcha_secret_key"
+                    name="_captcha_secret_key"
                     type="password"
-                    label={__('Recaptcha Secret Key', 'static-snap')}
+                    label={__('Captcha Secret Key', 'static-snap')}
                   />
 
                   <Alert severity="info">
                     {__(
-                      'The Recaptcha private key will be sent to the Static Snap Server. We will use these keys to protect your forms from spam.',
+                      'The Captcha private key will be sent to the Static Snap Server. We will use these keys to protect your forms from spam.',
                       'static-snap'
                     )}
                   </Alert>
                   <Alert severity="info">
-                    {__('You can get your Recaptcha keys from: ', 'static-snap')}
-                    <a
-                      href="https://www.google.com/recaptcha/admin/create"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      https://www.google.com/recaptcha/admin/create
+                    {__('You can get your powCAPTCHA keys from: ', 'static-snap')}
+                    <a href="https://powcaptcha.com" target="_blank" rel="noreferrer">
+                      https://powcaptcha.com
                     </a>
                   </Alert>
 
