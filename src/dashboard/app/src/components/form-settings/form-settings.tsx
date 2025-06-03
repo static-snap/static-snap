@@ -49,6 +49,7 @@ const FormSettings = ({ title }: FormSettingsProps) => {
 
   const isDirty = methods.formState.isDirty;
   const enabled = methods.watch('enabled');
+  const captchaType = methods.watch('captcha_type');
 
   const onSync = useCallback(async () => {
     setSyncLoading(true);
@@ -139,8 +140,8 @@ const FormSettings = ({ title }: FormSettingsProps) => {
                     name="captcha_type"
                     label={__('Captcha Type', 'static-snap')}
                     items={[
-                      { value: 'powcaptcha', label: __('PowCaptcha', 'static-snap') },
-                      { value: 'recaptcha', label: __('Recaptcha', 'static-snap') },
+                      { value: 'powcaptcha', label: __('powCAPTCHA', 'static-snap') },
+                      { value: 'recaptcha', label: __('reCaptcha', 'static-snap') },
                     ]}
                     helperText={sprintf(
                       __(
@@ -153,7 +154,11 @@ const FormSettings = ({ title }: FormSettingsProps) => {
                   {/* Recaptcha public Key */}
                   <TextField
                     name="captcha_site_key"
-                    label={__('Captcha public Key', 'static-snap')}
+                    label={
+                      captchaType === 'powcaptcha'
+                        ? __('Application ID', 'static-snap')
+                        : __('Captcha public Key', 'static-snap')
+                    }
                   />
 
                   {/* Recaptcha Secret Key */}
@@ -170,7 +175,10 @@ const FormSettings = ({ title }: FormSettingsProps) => {
                     )}
                   </Alert>
                   <Alert severity="info">
-                    {__('You can get your powCAPTCHA keys from: ', 'static-snap')}
+                    {__(
+                      'To maintain privacy-first standards, we recommend using powCAPTCHA. You can obtain your PowCaptcha keys at: ',
+                      'static-snap'
+                    )}
                     <a href="https://powcaptcha.com" target="_blank" rel="noreferrer">
                       https://powcaptcha.com
                     </a>
