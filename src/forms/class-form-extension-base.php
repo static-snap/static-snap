@@ -99,7 +99,7 @@ abstract class Form_Extension_Base extends Extension_Base {
 	/**
 	 * Get recaptcha type
 	 */
-	public function get_captcha_type(): string {
+	public function get_captcha_type() {
 		return Options::instance()->get( 'forms.captcha_type' );
 	}
 	/**
