@@ -146,6 +146,7 @@ abstract class Form_Extension_Base extends Extension_Base {
 			array(
 				'headers' => array(
 					'Authorization' => 'Bearer ' . $access_token,
+					'Content-Type'  => 'application/json',
 				),
 				'body' => wp_json_encode(
 					array(

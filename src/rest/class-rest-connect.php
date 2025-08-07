@@ -109,6 +109,7 @@ final class Rest_Connect extends WP_REST_Controller {
 				),
 				'headers' => array(
 					'Authorization' => 'BEARER ' . $connect_data['installation_access_token'],
+					'Content-Type' => 'application/json',
 				),
 			)
 		);
