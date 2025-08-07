@@ -19,6 +19,7 @@ use StaticSnap\Connect\Connect;
  */
 final class Rest_Connect extends WP_REST_Controller {
 
+
 	/**
 	 * Namespace
 	 *
@@ -109,7 +110,7 @@ final class Rest_Connect extends WP_REST_Controller {
 				),
 				'headers' => array(
 					'Authorization' => 'BEARER ' . $connect_data['installation_access_token'],
-					'Content-Type' => 'application/json',
+					'Content-Type'  => 'application/json',
 				),
 			)
 		);
