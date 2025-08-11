@@ -2,7 +2,7 @@
 Contributors: staticsnap
 Tags: static site generator, performance, SEO, security, headless
 Requires at least: 6.5.0
-Tested up to: 6.8.1
+Tested up to: 6.8.2
 Stable tag: 0.3.5
 Requires PHP: 7.4
 License: GPLv3
