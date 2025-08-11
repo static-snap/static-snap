@@ -15,6 +15,7 @@ use StaticSnap\Connect\Connect;
  * This calss is used to handle all API requests
  */
 final class API {
+
 	/**
 	 * Static snap api request
 	 *
@@ -77,7 +78,7 @@ final class API {
 			array_merge(
 				$params['args'],
 				array(
-					'body' => wp_json_encode( $body ),
+					'body' => $body,
 				)
 			)
 		);
@@ -92,9 +93,10 @@ final class API {
 	 * Delete
 	 *
 	 * @param string $action Action.
+	 * @param array  $body Body.
 	 * @return \WP_REST_Response|\WP_Error
 	 */
-	public function delete( $action ) {
+	public function delete( $action, $body ) {
 
 		$params = $this->get_request_params( $action );
 
@@ -102,6 +104,9 @@ final class API {
 			$params['endpoint'],
 			array_merge(
 				$params['args'],
+				array(
+					'body' => $body,
+				),
 				array(
 					'method' => 'DELETE',
 				)

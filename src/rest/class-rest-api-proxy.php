@@ -16,6 +16,7 @@ use WP_REST_Server;
  * This class will proxy the static snap api requests
  */
 final class Rest_Api_Proxy extends WP_REST_Controller {
+
 	/**
 	 * Namespace
 	 *
@@ -120,7 +121,9 @@ final class Rest_Api_Proxy extends WP_REST_Controller {
 			return new \WP_Error( 'invalid_action', 'Action is required', array( 'status' => 400 ) );
 		}
 
-		return $this->api->delete( $action );
+		$body = $request->get_body();
+
+		return $this->api->delete( $action, $body );
 	}
 
 
