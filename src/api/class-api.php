@@ -78,7 +78,7 @@ final class API {
 			array_merge(
 				$params['args'],
 				array(
-					'body' => $body,
+					'body' => wp_json_encode( $body ),
 				)
 			)
 		);
